@@ -486,6 +486,13 @@
                         </svg>
                         Download Template
                     </button>
+                    <button class="btn btn-secondary" id="downloadReportBtn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                        </svg>
+                        Download Report
+                    </button>
                     <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden">
                 </div>
                 <div class="excel-template">
@@ -1077,144 +1084,282 @@
             });
         });
 
-        // Download Template functionality
-        document.getElementById('downloadTemplateBtn').addEventListener('click', async () => {
-            try {
-                showMessage('Generating Excel template...', 'success');
-                
-                const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet('Sheet1');
-
-                // Add headers and sample data for each section
-                let currentRow = 1;
-
-                // REAGENT INVENTORY Section
-                worksheet.getCell(`B${currentRow}`).value = 'REAGENT INVENTORY';
-                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-                currentRow += 1;
-                
-                const reagentHeaders = ['S/N', '', 'Reagent', 'Size', 'Opening Stock', 'Quantity Used (Lab)', 'Location', 'Closing Balance', 'Status', 'Remarks'];
-                reagentHeaders.forEach((header, index) => {
-                    worksheet.getCell(currentRow, index + 1).value = header;
-                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
+        document.getElementById('downloadReportBtn').addEventListener('click', async () => {
+        try {
+            showMessage('Generating monthly laboratory report...', 'success');
+            
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Monthly Lab Report');
+            
+            // Get current date for report title
+            const now = new Date();
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"];
+            const reportDate = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+            
+            // Add company header
+            worksheet.getCell('B2').value = 'ATLANTIC FLUIDS AND INTEGRATED SERVICES LIMITED';
+            worksheet.getCell('B2').font = { bold: true };
+            worksheet.mergeCells('B2:D2');
+            
+            // Add report title
+            worksheet.getCell('B3').value = 'MONTHLY LABORATORY REPORT';
+            worksheet.getCell('B3').font = { bold: true };
+            worksheet.mergeCells('B3:D3');
+            
+            // Add period covered
+            worksheet.getCell('B4').value = `PERIOD COVERED: 1ST TO 31ST ${monthNames[now.getMonth()].toUpperCase()} ${now.getFullYear()}`;
+            worksheet.mergeCells('B4:D4');
+            
+            // Add empty row
+            worksheet.addRow([]);
+            
+            // SECTION A: PERSONNEL/LAB
+            worksheet.getCell('A6').value = 'A';
+            worksheet.getCell('B6').value = 'PERSONNEL/LAB';
+            worksheet.mergeCells('B6:D6');
+            
+            // Get personnel data from Firestore (you'll need to create a 'personnel' collection)
+            // For now, we'll use sample data - you should replace this with actual data
+            const personnelData = [
+                ['', 'TOTAL NUMBER OF STAFF IN TECHNICAL DEPARTMENT', '', 4],
+                ['', 'MANAGER', '', 1],
+                ['', 'SUPERVISOR', '', 1],
+                ['', 'INTERN(S)', '', 3]
+            ];
+            
+            personnelData.forEach(row => {
+                worksheet.addRow(row);
+            });
+            
+            // Add empty row
+            worksheet.addRow([]);
+            
+            // SECTION B: LAB TEST REPORT
+            worksheet.getCell('A12').value = 'B';
+            worksheet.getCell('B12').value = 'LAB TEST REPORT';
+            worksheet.mergeCells('B12:D12');
+            
+            // Add test report headers
+            const testHeaders = ['S/N', 'CHEMICAL TESTED', 'VENDOR', 'STATUS', 'REMARK'];
+            worksheet.addRow(testHeaders);
+        
+        // Get test data from Firestore (you'll need a 'labTests' collection)
+        try {
+            const testSnapshot = await db.collection('labTests').orderBy('chemicalTested').get();
+            let testSn = 1;
+            
+            if (!testSnapshot.empty) {
+                testSnapshot.forEach(doc => {
+                    const test = doc.data();
+                    worksheet.addRow([
+                        testSn++,
+                        test.chemicalTested || '',
+                        test.vendor || '',
+                        test.status || '',
+                        test.remark || ''
+                    ]);
                 });
-                currentRow += 1;
-
-                // Sample reagent data
-                const sampleReagentData = [
-                    [1, '', 'Hydrochloric Acid', '1L', 10, 2, 'Lab A', 8, 'OK', 'Good condition'],
-                    [2, '', 'Sodium Hydroxide', '500ml', 5, 1, 'Lab B', 4, 'Low Stock', 'Need reorder']
+            } else {
+                // Fallback to sample data if no tests in database
+                const testData = [
+                    [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
+                    [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
                 ];
-                
-                sampleReagentData.forEach(row => {
-                    row.forEach((cell, index) => {
-                        worksheet.getCell(currentRow, index + 1).value = cell;
-                    });
-                    currentRow += 1;
+                testData.forEach(row => {
+                    worksheet.addRow(row);
                 });
-                
-                currentRow += 2; // Empty rows
-
-                // EQUIPMENT INVENTORY Section
-                worksheet.getCell(`B${currentRow}`).value = 'EQUIPMENT INVENTORY';
-                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-                currentRow += 1;
-                
-                const equipmentHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'Load Out (Location)', 'Closing Balance', 'Calibration Status', 'Equipment Status', 'Remarks'];
-                equipmentHeaders.forEach((header, index) => {
-                    worksheet.getCell(currentRow, index + 1).value = header;
-                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
-                });
-                currentRow += 1;
-
-                // Sample equipment data
-                const sampleEquipmentData = [
-                    [1, '', 'Calibration Weight Set', 2, 1, 1, 'Lab C', 2, 'UP TO DATE', 'OK', 'Working fine'],
-                    [2, '', 'Digital Balance', 3, 2, 1, 'Lab A', 3, 'Due Soon', 'OK', 'Regular maintenance needed']
-                ];
-                
-                sampleEquipmentData.forEach(row => {
-                    row.forEach((cell, index) => {
-                        worksheet.getCell(currentRow, index + 1).value = cell;
-                    });
-                    currentRow += 1;
-                });
-                
-                currentRow += 2; // Empty rows
-
-                // CONSUMABLES Section
-                worksheet.getCell(`B${currentRow}`).value = 'CONSUMABLES';
-                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-                currentRow += 1;
-                
-                const consumableHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'Location', 'Balance', 'Equipment Status', 'Remarks'];
-                consumableHeaders.forEach((header, index) => {
-                    worksheet.getCell(currentRow, index + 1).value = header;
-                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
-                });
-                currentRow += 1;
-
-                // Sample consumable data
-                const sampleConsumableData = [
-                    [1, '', 'Test Tubes', 100, 50, 30, 'Storage A', 80, 'OK', 'Good supply'],
-                    [2, '', 'Pipette Tips', 200, 100, 50, 'Storage B', 150, 'OK', 'Regular stock']
-                ];
-                
-                sampleConsumableData.forEach(row => {
-                    row.forEach((cell, index) => {
-                        worksheet.getCell(currentRow, index + 1).value = cell;
-                    });
-                    currentRow += 1;
-                });
-                
-                currentRow += 2; // Empty rows
-
-                // GLASSWARES Section
-                worksheet.getCell(`B${currentRow}`).value = 'GLASSWARES';
-                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-                currentRow += 1;
-                
-                const glasswareHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'Load Out (Location)', 'Closing', 'Equipment Status', 'Remarks'];
-                glasswareHeaders.forEach((header, index) => {
-                    worksheet.getCell(currentRow, index + 1).value = header;
-                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
-                });
-                currentRow += 1;
-
-                // Sample glassware data
-                const sampleGlasswareData = [
-                    [1, '', 'Beakers 250ml', 20, 10, 5, 'Lab A', 15, 'OK', 'Clean condition'],
-                    [2, '', 'Measuring Cylinders 100ml', 15, 8, 4, 'Lab B', 12, 'OK', 'Good condition']
-                ];
-                
-                sampleGlasswareData.forEach(row => {
-                    row.forEach((cell, index) => {
-                        worksheet.getCell(currentRow, index + 1).value = cell;
-                    });
-                    currentRow += 1;
-                });
-
-                // Auto-fit columns
-                worksheet.columns.forEach(column => {
-                    let maxWidth = 0;
-                    column.eachCell({ includeEmpty: true }, cell => {
-                        const cellValue = cell.value ? cell.value.toString() : '';
-                        maxWidth = Math.max(maxWidth, cellValue.length);
-                    });
-                    column.width = Math.min(maxWidth + 2, 50);
-                });
-
-                // Generate and download the file
-                const buffer = await workbook.xlsx.writeBuffer();
-                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                saveAs(blob, 'Lab_Inventory_Template.xlsx');
-                
-                showMessage('Excel template downloaded successfully!', 'success');
-            } catch (error) {
-                console.error('Error generating template:', error);
-                showMessage('Error generating Excel template', 'error');
             }
+        } catch (error) {
+            console.error('Error loading lab tests:', error);
+            // Fallback to sample data if error occurs
+            const testData = [
+                [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
+                [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
+            ];
+            testData.forEach(row => {
+                worksheet.addRow(row);
+            });
+        }
+        
+        // Add empty row
+        worksheet.addRow([]);
+        
+        // SECTION C: REAGENT INVENTORY
+        worksheet.getCell('A23').value = 'C';
+        worksheet.getCell('B23').value = 'REAGENT INVENTORY';
+        worksheet.mergeCells('B23:D23');
+        
+        // Add reagent headers
+        const reagentHeaders = ['S/N', 'REAGENT', 'SIZE', 'OPENING STOCK', 'QUANTITY USED(LAB)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'STATUS', 'REMARKS'];
+        worksheet.addRow(reagentHeaders);
+        
+        // Get reagent data from Firestore
+        const reagentSnapshot = await collections.reagent.orderBy('name').get();
+        let reagentSn = 1;
+        
+        reagentSnapshot.forEach(doc => {
+            const reagent = doc.data();
+            worksheet.addRow([
+                reagentSn++,
+                reagent.name || '',
+                reagent.size || '',
+                reagent.stock || 0,
+                reagent.labStock || 0,
+                reagent.loadOut || reagent.location || '', // Use loadOut if available, otherwise location
+                reagent.closingBalance || 0,
+                reagent.status || '',
+                reagent.remarks || ''
+            ]);
         });
+        
+        // Add empty row
+        worksheet.addRow([]);
+        
+        // SECTION D: EQUIPMENT INVENTORY
+        const equipmentStartRow = worksheet.rowCount + 1;
+        worksheet.getCell(`A${equipmentStartRow}`).value = 'D';
+        worksheet.getCell(`B${equipmentStartRow}`).value = 'EQUIPMENT INVENTORY';
+        worksheet.mergeCells(`B${equipmentStartRow}:D${equipmentStartRow}`);
+        
+        // Add equipment headers
+        const equipmentHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'CALIBRATION STATUS', 'EQUIPMENT STATUS'];
+        worksheet.addRow(equipmentHeaders);
+        
+        // Get equipment data from Firestore
+        const equipmentSnapshot = await collections.equipment.orderBy('description').get();
+        let equipmentSn = 1;
+        
+        equipmentSnapshot.forEach(doc => {
+            const equipment = doc.data();
+            worksheet.addRow([
+                equipmentSn++,
+                equipment.description || '',
+                equipment.stock || 0,
+                equipment.quantityInStore || 0,
+                equipment.labStock || 0,
+                equipment.loadOut || '',
+                equipment.closingBalance || 0,
+                equipment.calibrationStatus || '',
+                equipment.equipmentStatus || ''
+            ]);
+        });
+        
+        // Add empty row
+        worksheet.addRow([]);
+        
+        // SECTION E: CONSUMABLES
+        const consumableStartRow = worksheet.rowCount + 1;
+        worksheet.getCell(`A${consumableStartRow}`).value = 'E';
+        worksheet.getCell(`B${consumableStartRow}`).value = 'CONSUMABLES';
+        worksheet.mergeCells(`B${consumableStartRow}:D${consumableStartRow}`);
+        
+        // Add consumables headers
+        const consumableHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
+        worksheet.addRow(consumableHeaders);
+        
+        // Get consumable data from Firestore
+        const consumableSnapshot = await collections.consumable.orderBy('description').get();
+        let consumableSn = 1;
+        
+        consumableSnapshot.forEach(doc => {
+            const consumable = doc.data();
+            worksheet.addRow([
+                consumableSn++,
+                consumable.description || '',
+                consumable.stock || 0,
+                consumable.quantityInStore || 0,
+                consumable.labStock || 0,
+                consumable.loadOut || consumable.location || '', // Use loadOut if available, otherwise location
+                consumable.balance || consumable.closingBalance || 0, // Try balance first, then closingBalance
+                consumable.status || consumable.equipmentStatus || '', // Try status first, then equipmentStatus
+                consumable.remarks || ''
+            ]);
+        });
+        
+        // Add empty row
+        worksheet.addRow([]);
+        
+        // SECTION F: GLASSWARES
+        const glasswareStartRow = worksheet.rowCount + 1;
+        worksheet.getCell(`A${glasswareStartRow}`).value = 'F';
+        worksheet.getCell(`B${glasswareStartRow}`).value = 'GLASSWARES';
+        worksheet.mergeCells(`B${glasswareStartRow}:D${glasswareStartRow}`);
+        
+        // Add glassware headers
+        const glasswareHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
+        worksheet.addRow(glasswareHeaders);
+        
+        // Get glassware data from Firestore
+        const glasswareSnapshot = await collections.glassware.orderBy('description').get();
+        let glasswareSn = 1;
+        
+        glasswareSnapshot.forEach(doc => {
+            const glassware = doc.data();
+            worksheet.addRow([
+                glasswareSn++,
+                glassware.description || '',
+                glassware.stock || 0,
+                glassware.quantityInStore || 0,
+                glassware.labStock || 0,
+                glassware.loadOut || '',
+                glassware.closing || glassware.closingBalance || 0, // Try closing first, then closingBalance
+                glassware.status || glassware.equipmentStatus || '', // Try status first, then equipmentStatus
+                glassware.remarks || ''
+            ]);
+        });
+        
+        // Add empty rows
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        
+        // Add remarks
+        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'Remarks: Some equipment were backloaded from Shafnet SDM.';
+        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+        
+        // Add calibration status
+        worksheet.addRow([]);
+        const nextCalibration = new Date();
+        nextCalibration.setMonth(nextCalibration.getMonth() + 3); // 3 months from now
+        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `EQUIPMENT CALIBRATION STATUS: Due on ${nextCalibration.getDate()}TH ${monthNames[nextCalibration.getMonth()].toUpperCase()} ${nextCalibration.getFullYear()}`;
+        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+        
+        // Add empty rows
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        
+        // Add prepared by (you can get this from user data or authentication)
+        const user = firebase.auth().currentUser;
+        const preparedByName = user ? user.displayName || 'Lab Technician' : 'Lab Technician';
+        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `REPORT PREPARED BY : ${preparedByName}`;
+        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+        
+        // Add approved by
+        worksheet.addRow([]);
+        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'APPROVED BY:';
+        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+        
+        // Style the worksheet
+        worksheet.columns.forEach(column => {
+            column.width = 15; // Set default column width
+        });
+        
+        // Set specific column widths
+        worksheet.getColumn(2).width = 30; // Description/Name column
+        worksheet.getColumn(3).width = 20; // Vendor/Size column
+        worksheet.getColumn(9).width = 25; // Remarks column
+        
+        // Generate and download the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `LAB_REPORT_FOR_${monthNames[now.getMonth()].toUpperCase()}_${now.getFullYear()}.xlsx`);
+        
+        showMessage('Monthly laboratory report downloaded successfully!', 'success');
+    } catch (error) {
+        console.error('Error generating report:', error);
+        showMessage('Error generating laboratory report', 'error');
+    }
+});
 
         // Excel Import functionality
         document.getElementById('importExcelBtn').addEventListener('click', () => {
