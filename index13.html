@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -175,8 +176,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .section-header {
@@ -391,8 +399,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .excel-template {
@@ -474,22 +487,28 @@
                 <div class="import-section">
                     <button class="btn" id="importExcelBtn">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
                         </svg>
                         Import Excel Data
                     </button>
                     <button class="btn btn-secondary" id="downloadTemplateBtn">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
                         </svg>
                         Download Template
                     </button>
                     <button class="btn btn-secondary" id="downloadReportBtn">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
                         </svg>
                         Download Report
                     </button>
@@ -498,10 +517,15 @@
                 <div class="excel-template">
                     <h4>Excel Template Format</h4>
                     <p><strong>Sheet1 Structure:</strong></p>
-                    <p>• REAGENT INVENTORY section with columns: S/N, Reagent, Size, Opening Stock, Quantity Used (Lab), Location, Closing Balance, Status, Remarks</p>
-                    <p>• EQUIPMENT INVENTORY section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock, Load Out, Closing Balance, Calibration Status, Equipment Status, Remarks</p>
-                    <p>• CONSUMABLES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock, Location, Balance, Equipment Status, Remarks</p>
-                    <p>• GLASSWARES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock, Load Out, Closing, Equipment Status, Remarks</p>
+                    <p>• REAGENT INVENTORY section with columns: S/N, Reagent, Size, Opening Stock, Quantity Used (Lab),
+                        LOAD OUT (LOCATION), Closing Balance, Status, Remarks</p>
+                    <p>• EQUIPMENT INVENTORY section with columns: S/N, Description, Opening Stock, Quantity in Store,
+                        Lab Stock, LOAD OUT (LOCATION), Closing Balance, Calibration Status, Equipment Status, Remarks
+                    </p>
+                    <p>• CONSUMABLES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab
+                        Stock, LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
+                    <p>• GLASSWARES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock,
+                        LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
                 </div>
             </div>
         </div>
@@ -511,25 +535,29 @@
         <div class="tabs">
             <button class="tab active" data-tab="reagents">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z"/>
+                    <path
+                        d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z" />
                 </svg>
                 Reagents
             </button>
             <button class="tab" data-tab="equipment">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z"/>
+                    <path
+                        d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z" />
                 </svg>
                 Equipment
             </button>
             <button class="tab" data-tab="consumables">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+                    <path
+                        d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
                 </svg>
                 Consumables
             </button>
             <button class="tab" data-tab="glasswares">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z"/>
+                    <path
+                        d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z" />
                 </svg>
                 Glasswares
             </button>
@@ -540,7 +568,8 @@
             <div class="section-header">
                 <h2>
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z"/>
+                        <path
+                            d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z" />
                     </svg>
                     Reagents Management
                 </h2>
@@ -587,8 +616,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="reagentLocation">Location</label>
-                            <input type="text" id="reagentLocation" class="form-control" placeholder="e.g., Lab A, Storage Room">
+                            <label for="reagentLocation">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="reagentLocation" class="form-control"
+                                placeholder="e.g., Lab A, Storage Room">
                         </div>
 
                         <div class="form-group">
@@ -608,7 +638,8 @@
 
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="reagentRemarks">Remarks</label>
-                            <textarea id="reagentRemarks" class="form-control" rows="3" placeholder="Additional notes or comments"></textarea>
+                            <textarea id="reagentRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
                         </div>
                     </div>
 
@@ -641,7 +672,7 @@
                                 <th>Size</th>
                                 <th>Opening Stock</th>
                                 <th>Quantity Used (Lab)</th>
-                                <th>Location</th>
+                                <th>LOAD OUT (LOCATION)</th>
                                 <th>Closing Balance</th>
                                 <th>Status</th>
                                 <th>Remarks</th>
@@ -660,7 +691,8 @@
             <div class="section-header">
                 <h2>
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z"/>
+                        <path
+                            d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z" />
                     </svg>
                     Equipment Management
                 </h2>
@@ -716,8 +748,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="equipmentLoadOut">Load Out (Location)</label>
-                            <input type="text" id="equipmentLoadOut" class="form-control" placeholder="e.g., Lab A, Field Site">
+                            <label for="equipmentLoadOut">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="equipmentLoadOut" class="form-control"
+                                placeholder="e.g., Lab A, Field Site">
                         </div>
 
                         <div class="form-group">
@@ -727,17 +760,20 @@
 
                         <div class="form-group hidden" id="calibrationStatusGroup">
                             <label for="calibrationStatus">Calibration Status</label>
-                            <input type="text" id="calibrationStatus" class="form-control" placeholder="e.g., UP TO DATE, Due Soon, Expired">
+                            <input type="text" id="calibrationStatus" class="form-control"
+                                placeholder="e.g., UP TO DATE, Due Soon, Expired">
                         </div>
 
                         <div class="form-group hidden" id="equipmentStatusGroup">
                             <label for="equipmentStatus">Equipment Status</label>
-                            <input type="text" id="equipmentStatus" class="form-control" placeholder="e.g., OK, Maintenance Needed">
+                            <input type="text" id="equipmentStatus" class="form-control"
+                                placeholder="e.g., OK, Maintenance Needed">
                         </div>
 
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="equipmentRemarks">Remarks</label>
-                            <textarea id="equipmentRemarks" class="form-control" rows="3" placeholder="Additional notes or comments"></textarea>
+                            <textarea id="equipmentRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
                         </div>
                     </div>
 
@@ -771,7 +807,7 @@
                                 <th>Opening Stock</th>
                                 <th>Quantity in Store</th>
                                 <th>Lab Stock</th>
-                                <th>Load Out</th>
+                                <th>LOAD OUT (LOCATION)</th>
                                 <th>Closing Balance</th>
                                 <th>Calibration Status</th>
                                 <th>Equipment Status</th>
@@ -791,7 +827,8 @@
             <div class="section-header">
                 <h2>
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+                        <path
+                            d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
                     </svg>
                     Consumables Management
                 </h2>
@@ -838,23 +875,26 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="consumableLocation">Location</label>
-                            <input type="text" id="consumableLocation" class="form-control" placeholder="e.g., Storage A, Lab B">
+                            <label for="consumableLocation">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="consumableLocation" class="form-control"
+                                placeholder="e.g., Storage A, Lab B">
                         </div>
 
                         <div class="form-group">
-                            <label for="consumableBalance">Balance</label>
+                            <label for="consumableBalance">Closing Balance</label>
                             <input type="number" id="consumableBalance" class="form-control" min="0">
                         </div>
 
                         <div class="form-group">
                             <label for="consumableStatus">Equipment Status</label>
-                            <input type="text" id="consumableStatus" class="form-control" placeholder="e.g., OK, Low Stock, Out of Stock">
+                            <input type="text" id="consumableStatus" class="form-control"
+                                placeholder="e.g., OK, Low Stock, Out of Stock">
                         </div>
 
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="consumableRemarks">Remarks</label>
-                            <textarea id="consumableRemarks" class="form-control" rows="3" placeholder="Additional notes or comments"></textarea>
+                            <textarea id="consumableRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
                         </div>
                     </div>
 
@@ -869,7 +909,8 @@
 
             <div class="card">
                 <div class="search-bar">
-                    <input type="text" id="consumableSearchInput" class="search-input" placeholder="Search consumables...">
+                    <input type="text" id="consumableSearchInput" class="search-input"
+                        placeholder="Search consumables...">
                     <button class="btn" id="consumableSearchBtn">Search</button>
                     <button class="btn btn-secondary" id="clearConsumableSearchBtn">Clear</button>
                 </div>
@@ -887,8 +928,8 @@
                                 <th>Opening Stock</th>
                                 <th>Quantity in Store</th>
                                 <th>Lab Stock</th>
-                                <th>Location</th>
-                                <th>Balance</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
                                 <th>Equipment Status</th>
                                 <th>Remarks</th>
                                 <th>Actions</th>
@@ -906,7 +947,8 @@
             <div class="section-header">
                 <h2>
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z"/>
+                        <path
+                            d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z" />
                     </svg>
                     Glasswares Management
                 </h2>
@@ -953,23 +995,26 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="glasswareLoadOut">Load Out (Location)</label>
-                            <input type="text" id="glasswareLoadOut" class="form-control" placeholder="e.g., Lab A, Field Site">
+                            <label for="glasswareLoadOut">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="glasswareLoadOut" class="form-control"
+                                placeholder="e.g., Lab A, Field Site">
                         </div>
 
                         <div class="form-group">
-                            <label for="glasswareClosing">Closing</label>
+                            <label for="glasswareClosing">Closing Balance</label>
                             <input type="number" id="glasswareClosing" class="form-control" min="0">
                         </div>
 
                         <div class="form-group">
                             <label for="glasswareStatus">Equipment Status</label>
-                            <input type="text" id="glasswareStatus" class="form-control" placeholder="e.g., OK, Damaged, Missing">
+                            <input type="text" id="glasswareStatus" class="form-control"
+                                placeholder="e.g., OK, Damaged, Missing">
                         </div>
 
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="glasswareRemarks">Remarks</label>
-                            <textarea id="glasswareRemarks" class="form-control" rows="3" placeholder="Additional notes or comments"></textarea>
+                            <textarea id="glasswareRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
                         </div>
                     </div>
 
@@ -1002,8 +1047,8 @@
                                 <th>Opening Stock</th>
                                 <th>Quantity in Store</th>
                                 <th>Lab Stock</th>
-                                <th>Load Out</th>
-                                <th>Closing</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
                                 <th>Equipment Status</th>
                                 <th>Remarks</th>
                                 <th>Actions</th>
@@ -1085,281 +1130,281 @@
         });
 
         document.getElementById('downloadReportBtn').addEventListener('click', async () => {
-        try {
-            showMessage('Generating monthly laboratory report...', 'success');
-            
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet('Monthly Lab Report');
-            
-            // Get current date for report title
-            const now = new Date();
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"];
-            const reportDate = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
-            
-            // Add company header
-            worksheet.getCell('B2').value = 'ATLANTIC FLUIDS AND INTEGRATED SERVICES LIMITED';
-            worksheet.getCell('B2').font = { bold: true };
-            worksheet.mergeCells('B2:D2');
-            
-            // Add report title
-            worksheet.getCell('B3').value = 'MONTHLY LABORATORY REPORT';
-            worksheet.getCell('B3').font = { bold: true };
-            worksheet.mergeCells('B3:D3');
-            
-            // Add period covered
-            worksheet.getCell('B4').value = `PERIOD COVERED: 1ST TO 31ST ${monthNames[now.getMonth()].toUpperCase()} ${now.getFullYear()}`;
-            worksheet.mergeCells('B4:D4');
-            
-            // Add empty row
-            worksheet.addRow([]);
-            
-            // SECTION A: PERSONNEL/LAB
-            worksheet.getCell('A6').value = 'A';
-            worksheet.getCell('B6').value = 'PERSONNEL/LAB';
-            worksheet.mergeCells('B6:D6');
-            
-            // Get personnel data from Firestore (you'll need to create a 'personnel' collection)
-            // For now, we'll use sample data - you should replace this with actual data
-            const personnelData = [
-                ['', 'TOTAL NUMBER OF STAFF IN TECHNICAL DEPARTMENT', '', 4],
-                ['', 'MANAGER', '', 1],
-                ['', 'SUPERVISOR', '', 1],
-                ['', 'INTERN(S)', '', 3]
-            ];
-            
-            personnelData.forEach(row => {
-                worksheet.addRow(row);
-            });
-            
-            // Add empty row
-            worksheet.addRow([]);
-            
-            // SECTION B: LAB TEST REPORT
-            worksheet.getCell('A12').value = 'B';
-            worksheet.getCell('B12').value = 'LAB TEST REPORT';
-            worksheet.mergeCells('B12:D12');
-            
-            // Add test report headers
-            const testHeaders = ['S/N', 'CHEMICAL TESTED', 'VENDOR', 'STATUS', 'REMARK'];
-            worksheet.addRow(testHeaders);
-        
-        // Get test data from Firestore (you'll need a 'labTests' collection)
-        try {
-            const testSnapshot = await db.collection('labTests').orderBy('chemicalTested').get();
-            let testSn = 1;
-            
-            if (!testSnapshot.empty) {
-                testSnapshot.forEach(doc => {
-                    const test = doc.data();
-                    worksheet.addRow([
-                        testSn++,
-                        test.chemicalTested || '',
-                        test.vendor || '',
-                        test.status || '',
-                        test.remark || ''
-                    ]);
-                });
-            } else {
-                // Fallback to sample data if no tests in database
-                const testData = [
-                    [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
-                    [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
+            try {
+                showMessage('Generating monthly laboratory report...', 'success');
+
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Monthly Lab Report');
+
+                // Get current date for report title
+                const now = new Date();
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                const reportDate = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+
+                // Add company header
+                worksheet.getCell('B2').value = 'ATLANTIC FLUIDS AND INTEGRATED SERVICES LIMITED';
+                worksheet.getCell('B2').font = { bold: true };
+                worksheet.mergeCells('B2:D2');
+
+                // Add report title
+                worksheet.getCell('B3').value = 'MONTHLY LABORATORY REPORT';
+                worksheet.getCell('B3').font = { bold: true };
+                worksheet.mergeCells('B3:D3');
+
+                // Add period covered
+                worksheet.getCell('B4').value = `PERIOD COVERED: 1ST TO 31ST ${monthNames[now.getMonth()].toUpperCase()} ${now.getFullYear()}`;
+                worksheet.mergeCells('B4:D4');
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION A: PERSONNEL/LAB
+                worksheet.getCell('A6').value = 'A';
+                worksheet.getCell('B6').value = 'PERSONNEL/LAB';
+                worksheet.mergeCells('B6:D6');
+
+                // Get personnel data from Firestore (you'll need to create a 'personnel' collection)
+                // For now, we'll use sample data - you should replace this with actual data
+                const personnelData = [
+                    ['', 'TOTAL NUMBER OF STAFF IN TECHNICAL DEPARTMENT', '', 4],
+                    ['', 'MANAGER', '', 1],
+                    ['', 'SUPERVISOR', '', 1],
+                    ['', 'INTERN(S)', '', 3]
                 ];
-                testData.forEach(row => {
+
+                personnelData.forEach(row => {
                     worksheet.addRow(row);
                 });
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION B: LAB TEST REPORT
+                worksheet.getCell('A12').value = 'B';
+                worksheet.getCell('B12').value = 'LAB TEST REPORT';
+                worksheet.mergeCells('B12:D12');
+
+                // Add test report headers
+                const testHeaders = ['S/N', 'CHEMICAL TESTED', 'VENDOR', 'STATUS', 'REMARK'];
+                worksheet.addRow(testHeaders);
+
+                // Get test data from Firestore (you'll need a 'labTests' collection)
+                try {
+                    const testSnapshot = await db.collection('labTests').orderBy('chemicalTested').get();
+                    let testSn = 1;
+
+                    if (!testSnapshot.empty) {
+                        testSnapshot.forEach(doc => {
+                            const test = doc.data();
+                            worksheet.addRow([
+                                testSn++,
+                                test.chemicalTested || '',
+                                test.vendor || '',
+                                test.status || '',
+                                test.remark || ''
+                            ]);
+                        });
+                    } else {
+                        // Fallback to sample data if no tests in database
+                        const testData = [
+                            [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
+                            [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
+                        ];
+                        testData.forEach(row => {
+                            worksheet.addRow(row);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading lab tests:', error);
+                    // Fallback to sample data if error occurs
+                    const testData = [
+                        [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
+                        [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
+                    ];
+                    testData.forEach(row => {
+                        worksheet.addRow(row);
+                    });
+                }
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION C: REAGENT INVENTORY
+                worksheet.getCell('A23').value = 'C';
+                worksheet.getCell('B23').value = 'REAGENT INVENTORY';
+                worksheet.mergeCells('B23:D23');
+
+                // Add reagent headers
+                const reagentHeaders = ['S/N', 'REAGENT', 'SIZE', 'OPENING STOCK', 'QUANTITY USED(LAB)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'STATUS', 'REMARKS'];
+                worksheet.addRow(reagentHeaders);
+
+                // Get reagent data from Firestore
+                const reagentSnapshot = await collections.reagent.orderBy('name').get();
+                let reagentSn = 1;
+
+                reagentSnapshot.forEach(doc => {
+                    const reagent = doc.data();
+                    worksheet.addRow([
+                        reagentSn++,
+                        reagent.name || '',
+                        reagent.size || '',
+                        reagent.stock || 0,
+                        reagent.labStock || 0,
+                        reagent.loadOutLocation || '', // Changed from loadOut/location to loadOutLocation
+                        reagent.closingBalance || 0,
+                        reagent.status || '',
+                        reagent.remarks || ''
+                    ]);
+                });
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION D: EQUIPMENT INVENTORY
+                const equipmentStartRow = worksheet.rowCount + 1;
+                worksheet.getCell(`A${equipmentStartRow}`).value = 'D';
+                worksheet.getCell(`B${equipmentStartRow}`).value = 'EQUIPMENT INVENTORY';
+                worksheet.mergeCells(`B${equipmentStartRow}:D${equipmentStartRow}`);
+
+                // Add equipment headers
+                const equipmentHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'CALIBRATION STATUS', 'EQUIPMENT STATUS'];
+                worksheet.addRow(equipmentHeaders);
+
+                // Get equipment data from Firestore
+                const equipmentSnapshot = await collections.equipment.orderBy('description').get();
+                let equipmentSn = 1;
+
+                equipmentSnapshot.forEach(doc => {
+                    const equipment = doc.data();
+                    worksheet.addRow([
+                        equipmentSn++,
+                        equipment.description || '',
+                        equipment.stock || 0,
+                        equipment.quantityInStore || 0,
+                        equipment.labStock || 0,
+                        equipment.loadOutLocation || '', // Changed from loadOut to loadOutLocation
+                        equipment.closingBalance || 0,
+                        equipment.calibrationStatus || '',
+                        equipment.equipmentStatus || ''
+                    ]);
+                });
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION E: CONSUMABLES
+                const consumableStartRow = worksheet.rowCount + 1;
+                worksheet.getCell(`A${consumableStartRow}`).value = 'E';
+                worksheet.getCell(`B${consumableStartRow}`).value = 'CONSUMABLES';
+                worksheet.mergeCells(`B${consumableStartRow}:D${consumableStartRow}`);
+
+                // Add consumables headers
+                const consumableHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
+                worksheet.addRow(consumableHeaders);
+
+                // Get consumable data from Firestore
+                const consumableSnapshot = await collections.consumable.orderBy('description').get();
+                let consumableSn = 1;
+
+                consumableSnapshot.forEach(doc => {
+                    const consumable = doc.data();
+                    worksheet.addRow([
+                        consumableSn++,
+                        consumable.description || '',
+                        consumable.stock || 0,
+                        consumable.quantityInStore || 0,
+                        consumable.labStock || 0,
+                        consumable.loadOutLocation || '', // Changed from loadOut/location to loadOutLocation
+                        consumable.closingBalance || 0, // Changed from balance to closingBalance
+                        consumable.status || consumable.equipmentStatus || '',
+                        consumable.remarks || ''
+                    ]);
+                });
+
+                // Add empty row
+                worksheet.addRow([]);
+
+                // SECTION F: GLASSWARES
+                const glasswareStartRow = worksheet.rowCount + 1;
+                worksheet.getCell(`A${glasswareStartRow}`).value = 'F';
+                worksheet.getCell(`B${glasswareStartRow}`).value = 'GLASSWARES';
+                worksheet.mergeCells(`B${glasswareStartRow}:D${glasswareStartRow}`);
+
+                // Add glassware headers
+                const glasswareHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
+                worksheet.addRow(glasswareHeaders);
+
+                // Get glassware data from Firestore
+                const glasswareSnapshot = await collections.glassware.orderBy('description').get();
+                let glasswareSn = 1;
+
+                glasswareSnapshot.forEach(doc => {
+                    const glassware = doc.data();
+                    worksheet.addRow([
+                        glasswareSn++,
+                        glassware.description || '',
+                        glassware.stock || 0,
+                        glassware.quantityInStore || 0,
+                        glassware.labStock || 0,
+                        glassware.loadOutLocation || '', // Changed from loadOut to loadOutLocation
+                        glassware.closingBalance || 0, // Changed from closing to closingBalance
+                        glassware.status || glassware.equipmentStatus || '',
+                        glassware.remarks || ''
+                    ]);
+                });
+
+                // Add empty rows
+                worksheet.addRow([]);
+                worksheet.addRow([]);
+
+                // Add remarks
+                worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'Remarks: Some equipment were backloaded from Shafnet SDM.';
+                worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+
+                // Add calibration status
+                worksheet.addRow([]);
+                const nextCalibration = new Date();
+                nextCalibration.setMonth(nextCalibration.getMonth() + 3); // 3 months from now
+                worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `EQUIPMENT CALIBRATION STATUS: Due on ${nextCalibration.getDate()}TH ${monthNames[nextCalibration.getMonth()].toUpperCase()} ${nextCalibration.getFullYear()}`;
+                worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+
+                // Add empty rows
+                // Add empty rows
+                worksheet.addRow([]);
+                worksheet.addRow([]);
+
+                // Add prepared by (fixed - removed user reference)
+                const preparedByName = 'Lab Technician';
+                worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `REPORT PREPARED BY : ${preparedByName}`;
+                worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+
+                // Add approved by
+                worksheet.addRow([]);
+                worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'APPROVED BY:';
+                worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
+
+                // Style the worksheet
+                worksheet.columns.forEach(column => {
+                    column.width = 15; // Set default column width
+                });
+
+                // Set specific column widths
+                worksheet.getColumn(2).width = 30; // Description/Name column
+                worksheet.getColumn(3).width = 20; // Vendor/Size column
+                worksheet.getColumn(9).width = 25; // Remarks column
+
+                // Generate and download the file
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                saveAs(blob, `LAB_REPORT_FOR_${monthNames[now.getMonth()].toUpperCase()}_${now.getFullYear()}.xlsx`);
+
+                showMessage('Monthly laboratory report downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showMessage('Error generating laboratory report', 'error');
             }
-        } catch (error) {
-            console.error('Error loading lab tests:', error);
-            // Fallback to sample data if error occurs
-            const testData = [
-                [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
-                [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
-            ];
-            testData.forEach(row => {
-                worksheet.addRow(row);
-            });
-        }
-        
-        // Add empty row
-        worksheet.addRow([]);
-        
-        // SECTION C: REAGENT INVENTORY
-        worksheet.getCell('A23').value = 'C';
-        worksheet.getCell('B23').value = 'REAGENT INVENTORY';
-        worksheet.mergeCells('B23:D23');
-        
-        // Add reagent headers
-        const reagentHeaders = ['S/N', 'REAGENT', 'SIZE', 'OPENING STOCK', 'QUANTITY USED(LAB)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'STATUS', 'REMARKS'];
-        worksheet.addRow(reagentHeaders);
-        
-        // Get reagent data from Firestore
-        const reagentSnapshot = await collections.reagent.orderBy('name').get();
-        let reagentSn = 1;
-        
-        reagentSnapshot.forEach(doc => {
-            const reagent = doc.data();
-            worksheet.addRow([
-                reagentSn++,
-                reagent.name || '',
-                reagent.size || '',
-                reagent.stock || 0,
-                reagent.labStock || 0,
-                reagent.loadOut || reagent.location || '', // Use loadOut if available, otherwise location
-                reagent.closingBalance || 0,
-                reagent.status || '',
-                reagent.remarks || ''
-            ]);
         });
-        
-        // Add empty row
-        worksheet.addRow([]);
-        
-        // SECTION D: EQUIPMENT INVENTORY
-        const equipmentStartRow = worksheet.rowCount + 1;
-        worksheet.getCell(`A${equipmentStartRow}`).value = 'D';
-        worksheet.getCell(`B${equipmentStartRow}`).value = 'EQUIPMENT INVENTORY';
-        worksheet.mergeCells(`B${equipmentStartRow}:D${equipmentStartRow}`);
-        
-        // Add equipment headers
-        const equipmentHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'CALIBRATION STATUS', 'EQUIPMENT STATUS'];
-        worksheet.addRow(equipmentHeaders);
-        
-        // Get equipment data from Firestore
-        const equipmentSnapshot = await collections.equipment.orderBy('description').get();
-        let equipmentSn = 1;
-        
-        equipmentSnapshot.forEach(doc => {
-            const equipment = doc.data();
-            worksheet.addRow([
-                equipmentSn++,
-                equipment.description || '',
-                equipment.stock || 0,
-                equipment.quantityInStore || 0,
-                equipment.labStock || 0,
-                equipment.loadOut || '',
-                equipment.closingBalance || 0,
-                equipment.calibrationStatus || '',
-                equipment.equipmentStatus || ''
-            ]);
-        });
-        
-        // Add empty row
-        worksheet.addRow([]);
-        
-        // SECTION E: CONSUMABLES
-        const consumableStartRow = worksheet.rowCount + 1;
-        worksheet.getCell(`A${consumableStartRow}`).value = 'E';
-        worksheet.getCell(`B${consumableStartRow}`).value = 'CONSUMABLES';
-        worksheet.mergeCells(`B${consumableStartRow}:D${consumableStartRow}`);
-        
-        // Add consumables headers
-        const consumableHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
-        worksheet.addRow(consumableHeaders);
-        
-        // Get consumable data from Firestore
-        const consumableSnapshot = await collections.consumable.orderBy('description').get();
-        let consumableSn = 1;
-        
-        consumableSnapshot.forEach(doc => {
-            const consumable = doc.data();
-            worksheet.addRow([
-                consumableSn++,
-                consumable.description || '',
-                consumable.stock || 0,
-                consumable.quantityInStore || 0,
-                consumable.labStock || 0,
-                consumable.loadOut || consumable.location || '', // Use loadOut if available, otherwise location
-                consumable.balance || consumable.closingBalance || 0, // Try balance first, then closingBalance
-                consumable.status || consumable.equipmentStatus || '', // Try status first, then equipmentStatus
-                consumable.remarks || ''
-            ]);
-        });
-        
-        // Add empty row
-        worksheet.addRow([]);
-        
-        // SECTION F: GLASSWARES
-        const glasswareStartRow = worksheet.rowCount + 1;
-        worksheet.getCell(`A${glasswareStartRow}`).value = 'F';
-        worksheet.getCell(`B${glasswareStartRow}`).value = 'GLASSWARES';
-        worksheet.mergeCells(`B${glasswareStartRow}:D${glasswareStartRow}`);
-        
-        // Add glassware headers
-        const glasswareHeaders = ['S/N', 'DESCRIPTION', 'OPENING STOCK', 'QUANTITY IN STORE', 'LAB STOCK', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'EQUIPMENT STATUS', 'REMARKS'];
-        worksheet.addRow(glasswareHeaders);
-        
-        // Get glassware data from Firestore
-        const glasswareSnapshot = await collections.glassware.orderBy('description').get();
-        let glasswareSn = 1;
-        
-        glasswareSnapshot.forEach(doc => {
-            const glassware = doc.data();
-            worksheet.addRow([
-                glasswareSn++,
-                glassware.description || '',
-                glassware.stock || 0,
-                glassware.quantityInStore || 0,
-                glassware.labStock || 0,
-                glassware.loadOut || '',
-                glassware.closing || glassware.closingBalance || 0, // Try closing first, then closingBalance
-                glassware.status || glassware.equipmentStatus || '', // Try status first, then equipmentStatus
-                glassware.remarks || ''
-            ]);
-        });
-        
-        // Add empty rows
-        worksheet.addRow([]);
-        worksheet.addRow([]);
-        
-        // Add remarks
-        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'Remarks: Some equipment were backloaded from Shafnet SDM.';
-        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
-        
-        // Add calibration status
-        worksheet.addRow([]);
-        const nextCalibration = new Date();
-        nextCalibration.setMonth(nextCalibration.getMonth() + 3); // 3 months from now
-        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `EQUIPMENT CALIBRATION STATUS: Due on ${nextCalibration.getDate()}TH ${monthNames[nextCalibration.getMonth()].toUpperCase()} ${nextCalibration.getFullYear()}`;
-        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
-        
-        // Add empty rows
-        worksheet.addRow([]);
-        worksheet.addRow([]);
-        
-        // Add prepared by (you can get this from user data or authentication)
-        const user = firebase.auth().currentUser;
-        const preparedByName = user ? user.displayName || 'Lab Technician' : 'Lab Technician';
-        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = `REPORT PREPARED BY : ${preparedByName}`;
-        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
-        
-        // Add approved by
-        worksheet.addRow([]);
-        worksheet.getCell(`B${worksheet.rowCount + 1}`).value = 'APPROVED BY:';
-        worksheet.mergeCells(`B${worksheet.rowCount}:D${worksheet.rowCount}`);
-        
-        // Style the worksheet
-        worksheet.columns.forEach(column => {
-            column.width = 15; // Set default column width
-        });
-        
-        // Set specific column widths
-        worksheet.getColumn(2).width = 30; // Description/Name column
-        worksheet.getColumn(3).width = 20; // Vendor/Size column
-        worksheet.getColumn(9).width = 25; // Remarks column
-        
-        // Generate and download the file
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, `LAB_REPORT_FOR_${monthNames[now.getMonth()].toUpperCase()}_${now.getFullYear()}.xlsx`);
-        
-        showMessage('Monthly laboratory report downloaded successfully!', 'success');
-    } catch (error) {
-        console.error('Error generating report:', error);
-        showMessage('Error generating laboratory report', 'error');
-    }
-});
 
         // Excel Import functionality
         document.getElementById('importExcelBtn').addEventListener('click', () => {
@@ -1389,7 +1434,7 @@
                 await processGlassware(sheet);
 
                 showMessage('Excel data imported successfully!', 'success');
-                
+
                 // Refresh all inventory views
                 inventoryTypes.forEach(type => loadInventoryData(type));
 
@@ -1439,12 +1484,13 @@
                     size: getCellValue(row, 4),
                     stock: parseInt(getCellValue(row, 5)) || 0,
                     labStock: parseInt(getCellValue(row, 6)) || 0,
-                    location: getCellValue(row, 7),
+                    loadOutLocation: getCellValue(row, 7), // Changed from location to loadOutLocation
                     closingBalance: parseInt(getCellValue(row, 8)) || 0,
                     status: getCellValue(row, 9),
                     remarks: getCellValue(row, 10),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
+
 
                 if (reagent.name) reagents.push(reagent);
             }
@@ -1490,7 +1536,7 @@
                     stock: parseInt(getCellValue(row, 4)) || 0,
                     quantityInStore: parseInt(getCellValue(row, 5)) || 0,
                     labStock: parseInt(getCellValue(row, 6)) || 0,
-                    loadOut: getCellValue(row, 7),
+                    loadOutLocation: getCellValue(row, 7), // Changed from loadOut to loadOutLocation
                     closingBalance: parseInt(getCellValue(row, 8)) || 0,
                     calibrationStatus: getCellValue(row, 9),
                     equipmentStatus: getCellValue(row, 10),
@@ -1511,6 +1557,143 @@
                 await batch.commit();
             }
         }
+        document.getElementById('downloadTemplateBtn').addEventListener('click', async () => {
+            try {
+                showMessage('Generating Excel template...', 'success');
+
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Sheet1');
+
+                // Add headers and sample data for each section
+                let currentRow = 1;
+
+                // REAGENT INVENTORY Section
+                worksheet.getCell(`B${currentRow}`).value = 'REAGENT INVENTORY';
+                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
+                currentRow += 1;
+
+                const reagentHeaders = ['S/N', '', 'Reagent', 'Size', 'Opening Stock', 'Quantity Used (Lab)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Status', 'Remarks'];
+                reagentHeaders.forEach((header, index) => {
+                    worksheet.getCell(currentRow, index + 1).value = header;
+                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
+                });
+                currentRow += 1;
+
+                // Sample reagent data
+                const sampleReagentData = [
+                    [1, '', 'Hydrochloric Acid', '1L', 10, 2, 'Lab A', 8, 'OK', 'Good condition'],
+                    [2, '', 'Sodium Hydroxide', '500ml', 5, 1, 'Lab B', 4, 'Low Stock', 'Need reorder']
+                ];
+
+                sampleReagentData.forEach(row => {
+                    row.forEach((cell, index) => {
+                        worksheet.getCell(currentRow, index + 1).value = cell;
+                    });
+                    currentRow += 1;
+                });
+
+                currentRow += 2; // Empty rows
+
+                // EQUIPMENT INVENTORY Section
+                worksheet.getCell(`B${currentRow}`).value = 'EQUIPMENT INVENTORY';
+                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
+                currentRow += 1;
+
+                const equipmentHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'Closing Balance', 'Calibration Status', 'Equipment Status', 'Remarks'];
+                equipmentHeaders.forEach((header, index) => {
+                    worksheet.getCell(currentRow, index + 1).value = header;
+                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
+                });
+                currentRow += 1;
+
+                // Sample equipment data
+                const sampleEquipmentData = [
+                    [1, '', 'Calibration Weight Set', 2, 1, 1, 'Lab C', 2, 'UP TO DATE', 'OK', 'Working fine'],
+                    [2, '', 'Digital Balance', 3, 2, 1, 'Lab A', 3, 'Due Soon', 'OK', 'Regular maintenance needed']
+                ];
+
+                sampleEquipmentData.forEach(row => {
+                    row.forEach((cell, index) => {
+                        worksheet.getCell(currentRow, index + 1).value = cell;
+                    });
+                    currentRow += 1;
+                });
+
+                currentRow += 2; // Empty rows
+
+                // CONSUMABLES Section
+                worksheet.getCell(`B${currentRow}`).value = 'CONSUMABLES';
+                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
+                currentRow += 1;
+
+                const consumableHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Equipment Status', 'Remarks'];
+                consumableHeaders.forEach((header, index) => {
+                    worksheet.getCell(currentRow, index + 1).value = header;
+                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
+                });
+                currentRow += 1;
+
+                // Sample consumable data
+                const sampleConsumableData = [
+                    [1, '', 'Test Tubes', 100, 50, 30, 'Storage A', 80, 'OK', 'Good supply'],
+                    [2, '', 'Pipette Tips', 200, 100, 50, 'Storage B', 150, 'OK', 'Regular stock']
+                ];
+
+                sampleConsumableData.forEach(row => {
+                    row.forEach((cell, index) => {
+                        worksheet.getCell(currentRow, index + 1).value = cell;
+                    });
+                    currentRow += 1;
+                });
+
+                currentRow += 2; // Empty rows
+
+                // GLASSWARES Section
+                worksheet.getCell(`B${currentRow}`).value = 'GLASSWARES';
+                worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
+                currentRow += 1;
+
+                const glasswareHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Equipment Status', 'Remarks'];
+                glasswareHeaders.forEach((header, index) => {
+                    worksheet.getCell(currentRow, index + 1).value = header;
+                    worksheet.getCell(currentRow, index + 1).font = { bold: true };
+                });
+                currentRow += 1;
+
+                // Sample glassware data
+                const sampleGlasswareData = [
+                    [1, '', 'Beakers 250ml', 20, 10, 5, 'Lab A', 15, 'OK', 'Clean condition'],
+                    [2, '', 'Measuring Cylinders 100ml', 15, 8, 4, 'Lab B', 12, 'OK', 'Good condition']
+                ];
+
+                sampleGlasswareData.forEach(row => {
+                    row.forEach((cell, index) => {
+                        worksheet.getCell(currentRow, index + 1).value = cell;
+                    });
+                    currentRow += 1;
+                });
+
+                // Auto-fit columns
+                worksheet.columns.forEach(column => {
+                    let maxWidth = 0;
+                    column.eachCell({ includeEmpty: true }, cell => {
+                        const cellValue = cell.value ? cell.value.toString() : '';
+                        maxWidth = Math.max(maxWidth, cellValue.length);
+                    });
+                    column.width = Math.min(maxWidth + 2, 50);
+                });
+
+                // Generate and download the file
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                saveAs(blob, 'Lab_Inventory_Template.xlsx');
+
+                showMessage('Excel template downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error generating template:', error);
+                showMessage('Error generating Excel template', 'error');
+            }
+        });
 
         async function processConsumables(sheet) {
             const consumables = [];
@@ -1543,8 +1726,8 @@
                     stock: parseInt(getCellValue(row, 4)) || 0,
                     quantityInStore: parseInt(getCellValue(row, 5)) || 0,
                     labStock: parseInt(getCellValue(row, 6)) || 0,
-                    location: getCellValue(row, 7),
-                    balance: parseInt(getCellValue(row, 8)) || 0,
+                    loadOutLocation: getCellValue(row, 7), // Changed from location to loadOutLocation
+                    closingBalance: parseInt(getCellValue(row, 8)) || 0, // Changed from balance to closingBalance
                     status: getCellValue(row, 9),
                     remarks: getCellValue(row, 10),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1589,8 +1772,8 @@
                     stock: parseInt(getCellValue(row, 4)) || 0,
                     quantityInStore: parseInt(getCellValue(row, 5)) || 0,
                     labStock: parseInt(getCellValue(row, 6)) || 0,
-                    loadOut: getCellValue(row, 7),
-                    closing: parseInt(getCellValue(row, 8)) || 0,
+                    loadOutLocation: getCellValue(row, 7), // Changed from loadOut to loadOutLocation
+                    closingBalance: parseInt(getCellValue(row, 8)) || 0, // Changed from closing to closingBalance
                     status: getCellValue(row, 9),
                     remarks: getCellValue(row, 10),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1749,7 +1932,7 @@
                 document.getElementById('reagentSize').value = item.size || '';
                 document.getElementById('reagentStock').value = item.stock || 0;
                 document.getElementById('reagentLabStock').value = item.labStock || 0;
-                document.getElementById('reagentLocation').value = item.location || '';
+                document.getElementById('reagentLocation').value = item.loadOutLocation || ''; // Changed from location to loadOutLocation
                 document.getElementById('reagentClosingBalance').value = item.closingBalance || 0;
                 document.getElementById('reagentStatus').value = item.status || 'OK';
                 document.getElementById('reagentRemarks').value = item.remarks || '';
@@ -1759,7 +1942,7 @@
                 document.getElementById('equipmentStock').value = item.stock || 0;
                 document.getElementById('equipmentQuantityInStore').value = item.quantityInStore || 0;
                 document.getElementById('equipmentLabStock').value = item.labStock || 0;
-                document.getElementById('equipmentLoadOut').value = item.loadOut || '';
+                document.getElementById('equipmentLoadOut').value = item.loadOutLocation || ''; // Changed from loadOut to loadOutLocation
                 document.getElementById('equipmentClosingBalance').value = item.closingBalance || 0;
                 document.getElementById('equipmentCategory').value = item.category || '';
                 document.getElementById('equipmentRemarks').value = item.remarks || '';
@@ -1784,8 +1967,8 @@
                 document.getElementById('consumableStock').value = item.stock || 0;
                 document.getElementById('consumableQuantityInStore').value = item.quantityInStore || 0;
                 document.getElementById('consumableLabStock').value = item.labStock || 0;
-                document.getElementById('consumableLocation').value = item.location || '';
-                document.getElementById('consumableBalance').value = item.balance || 0;
+                document.getElementById('consumableLocation').value = item.loadOutLocation || ''; // Changed from location to loadOutLocation
+                document.getElementById('consumableBalance').value = item.closingBalance || 0; // Changed from balance to closingBalance
                 document.getElementById('consumableStatus').value = item.status || '';
                 document.getElementById('consumableRemarks').value = item.remarks || '';
             }
@@ -1794,8 +1977,8 @@
                 document.getElementById('glasswareStock').value = item.stock || 0;
                 document.getElementById('glasswareQuantityInStore').value = item.quantityInStore || 0;
                 document.getElementById('glasswareLabStock').value = item.labStock || 0;
-                document.getElementById('glasswareLoadOut').value = item.loadOut || '';
-                document.getElementById('glasswareClosing').value = item.closing || 0;
+                document.getElementById('glasswareLoadOut').value = item.loadOutLocation || ''; // Changed from loadOut to loadOutLocation
+                document.getElementById('glasswareClosing').value = item.closingBalance || 0; // Changed from closing to closingBalance
                 document.getElementById('glasswareStatus').value = item.status || '';
                 document.getElementById('glasswareRemarks').value = item.remarks || '';
             }
@@ -1838,7 +2021,7 @@
             nameField.value = '';
 
             const fields = ['Size', 'Stock', 'LabStock', 'QuantityInStore', 'Location', 'Balance', 'ClosingBalance', 'Closing', 'LoadOut', 'Status', 'Category', 'Remarks'];
-            
+
             fields.forEach(field => {
                 const element = document.getElementById(`${type}${field}`);
                 if (element) {
@@ -1913,7 +2096,7 @@
                 itemData.size = document.getElementById('reagentSize').value.trim();
                 itemData.stock = parseInt(document.getElementById('reagentStock').value) || 0;
                 itemData.labStock = parseInt(document.getElementById('reagentLabStock').value) || 0;
-                itemData.location = document.getElementById('reagentLocation').value.trim();
+                itemData.loadOutLocation = document.getElementById('reagentLocation').value.trim(); // Changed from location to loadOutLocation
                 itemData.closingBalance = parseInt(document.getElementById('reagentClosingBalance').value) || 0;
                 itemData.status = document.getElementById('reagentStatus').value.trim();
                 itemData.remarks = document.getElementById('reagentRemarks').value.trim();
@@ -1924,7 +2107,7 @@
                 itemData.stock = parseInt(document.getElementById('equipmentStock').value) || 0;
                 itemData.quantityInStore = parseInt(document.getElementById('equipmentQuantityInStore').value) || 0;
                 itemData.labStock = parseInt(document.getElementById('equipmentLabStock').value) || 0;
-                itemData.loadOut = document.getElementById('equipmentLoadOut').value.trim();
+                itemData.loadOutLocation = document.getElementById('equipmentLoadOut').value.trim(); // Changed from loadOut to loadOutLocation
                 itemData.closingBalance = parseInt(document.getElementById('equipmentClosingBalance').value) || 0;
                 itemData.remarks = document.getElementById('equipmentRemarks').value.trim();
 
@@ -1943,8 +2126,8 @@
                 itemData.stock = parseInt(document.getElementById('consumableStock').value) || 0;
                 itemData.quantityInStore = parseInt(document.getElementById('consumableQuantityInStore').value) || 0;
                 itemData.labStock = parseInt(document.getElementById('consumableLabStock').value) || 0;
-                itemData.location = document.getElementById('consumableLocation').value.trim();
-                itemData.balance = parseInt(document.getElementById('consumableBalance').value) || 0;
+                itemData.loadOutLocation = document.getElementById('consumableLocation').value.trim(); // Changed from location to loadOutLocation
+                itemData.closingBalance = parseInt(document.getElementById('consumableBalance').value) || 0; // Changed from balance to closingBalance
                 itemData.status = document.getElementById('consumableStatus').value.trim();
                 itemData.remarks = document.getElementById('consumableRemarks').value.trim();
             }
@@ -1953,15 +2136,14 @@
                 itemData.stock = parseInt(document.getElementById('glasswareStock').value) || 0;
                 itemData.quantityInStore = parseInt(document.getElementById('glasswareQuantityInStore').value) || 0;
                 itemData.labStock = parseInt(document.getElementById('glasswareLabStock').value) || 0;
-                itemData.loadOut = document.getElementById('glasswareLoadOut').value.trim();
-                itemData.closing = parseInt(document.getElementById('glasswareClosing').value) || 0;
+                itemData.loadOutLocation = document.getElementById('glasswareLoadOut').value.trim(); // Changed from loadOut to loadOutLocation
+                itemData.closingBalance = parseInt(document.getElementById('glasswareClosing').value) || 0; // Changed from closing to closingBalance
                 itemData.status = document.getElementById('glasswareStatus').value.trim();
                 itemData.remarks = document.getElementById('glasswareRemarks').value.trim();
             }
 
             return itemData;
         }
-
         function loadInventoryData(type) {
             const container = document.getElementById(`${type}InventoryContainer`);
             const tableContainer = document.getElementById(`${type}TableContainer`);
@@ -2014,7 +2196,7 @@
                     <td>${item.size || ''}</td>
                     <td>${item.stock || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.location || ''}</td>
+                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from location to loadOutLocation -->
                     <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
@@ -2037,7 +2219,7 @@
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOut || ''}</td>
+                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from loadOut to loadOutLocation -->
                     <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.calibrationStatus)}</td>
                     <td>${renderStatusBadge(item.equipmentStatus)}</td>
@@ -2057,8 +2239,8 @@
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.location || ''}</td>
-                    <td>${item.balance || 0}</td>
+                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from location to loadOutLocation -->
+                    <td>${item.closingBalance || 0}</td> <!-- Changed from balance to closingBalance -->
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
                     <td>
@@ -2076,8 +2258,8 @@
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOut || ''}</td>
-                    <td>${item.closing || 0}</td>
+                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from loadOut to loadOutLocation -->
+                    <td>${item.closingBalance || 0}</td> <!-- Changed from closing to closingBalance -->
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
                     <td>
@@ -2170,4 +2352,5 @@
         });
     </script>
 </body>
+
 </html>
