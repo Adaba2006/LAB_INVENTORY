@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratory Inventory Management System</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Laboratory Inventory Management</h1>
+            <p>Professional inventory tracking and management system</p>
+        </header>
+
+        <div class="toolbar">
+            <div class="toolbar-content">
+                <div class="import-section">
+                    <button class="btn" id="importExcelBtn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                        </svg>
+                        Import Excel Data
+                    </button>
+                    <button class="btn btn-secondary" id="downloadTemplateBtn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>
+                        Download Template
+                    </button>
+                    <button class="btn btn-secondary" id="downloadReportBtn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>
+                        Download Report
+                    </button>
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden">
+                </div>
+                <div class="excel-template">
+                    <h4>Excel Template Format</h4>
+                    <p><strong>Sheet1 Structure:</strong></p>
+                    <p>• REAGENT INVENTORY section with columns: S/N, Reagent, Size, Opening Stock, Quantity Used (Lab),
+                        LOAD OUT (LOCATION), Closing Balance, Status, Remarks</p>
+                    <p>• EQUIPMENT INVENTORY section with columns: S/N, Description, Opening Stock, Quantity in Store,
+                        Lab Stock, LOAD OUT (LOCATION), Closing Balance, Calibration Status, Equipment Status, Remarks
+                    </p>
+                    <p>• CONSUMABLES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab
+                        Stock, LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
+                    <p>• GLASSWARES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock,
+                        LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="messageContainer"></div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="reagents">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z" />
+                </svg>
+                Reagents
+            </button>
+            <button class="tab" data-tab="equipment">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z" />
+                </svg>
+                Equipment
+            </button>
+            <button class="tab" data-tab="consumables">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
+                </svg>
+                Consumables
+            </button>
+            <button class="tab" data-tab="glasswares">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z" />
+                </svg>
+                Glasswares
+            </button>
+        </div>
+
+        <!-- REAGENTS TAB -->
+        <div class="tab-content active" id="reagents-tab">
+            <div class="section-header">
+                <h2>
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path
+                            d="M8.5 1a.5.5 0 0 0-1 0v1.293L6.354 1.146a.5.5 0 1 0-.708.708L7.293 3.5H1.5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H9.707L11.354 1.854a.5.5 0 1 0-.708-.708L9.5 2.293V1z" />
+                    </svg>
+                    Reagents Management
+                </h2>
+                <p>Manage chemical reagents and their inventory levels</p>
+            </div>
+
+            <div class="card">
+                <form id="reagentForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="reagentAction">Action</label>
+                            <select id="reagentAction" class="form-control" required>
+                                <option value="">Select Action</option>
+                                <option value="add">Add New Reagent</option>
+                                <option value="update">Update Existing Reagent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group hidden" id="reagentSelectGroup">
+                            <label for="existingReagent">Select Reagent</label>
+                            <select id="existingReagent" class="form-control">
+                                <option value="">Select a reagent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentName">Reagent Name</label>
+                            <input type="text" id="reagentName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentSize">Size</label>
+                            <input type="text" id="reagentSize" class="form-control" placeholder="e.g., 500ml, 1L">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentStock">Opening Stock</label>
+                            <input type="number" id="reagentStock" class="form-control" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentLabStock">Quantity Used (Lab)</label>
+                            <input type="number" id="reagentLabStock" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentLocation">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="reagentLocation" class="form-control"
+                                placeholder="e.g., Lab A, Storage Room">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentClosingBalance">Closing Balance</label>
+                            <input type="number" id="reagentClosingBalance" class="form-control" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reagentStatus">Status</label>
+                            <select id="reagentStatus" class="form-control">
+                                <option value="OK">OK</option>
+                                <option value="Low Stock">Low Stock</option>
+                                <option value="Expired">Expired</option>
+                                <option value="Damaged">Damaged</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="reagentRemarks">Remarks</label>
+                            <textarea id="reagentRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="reagentId">
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="clearReagentBtn">Clear Form</button>
+                        <button type="submit" class="btn btn-success" id="saveReagentBtn">Save Reagent</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="reagentSearchInput" class="search-input" placeholder="Search reagents...">
+                    <button class="btn" id="reagentSearchBtn">Search</button>
+                    <button class="btn btn-secondary" id="clearReagentSearchBtn">Clear</button>
+                </div>
+
+                <div id="reagentInventoryContainer">
+                    <div class="loading">Loading reagents...</div>
+                </div>
+
+                <div class="table-container hidden" id="reagentTableContainer">
+                    <table class="table" id="reagentInventoryTable">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Reagent</th>
+                                <th>Size</th>
+                                <th>Opening Stock</th>
+                                <th>Quantity Used (Lab)</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reagentInventoryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- EQUIPMENT TAB -->
+        <div class="tab-content" id="equipment-tab">
+            <div class="section-header">
+                <h2>
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path
+                            d="M8.5 1c.5 0 1 .5 1 1v3h3c.5 0 1 .5 1 1v6c0 .5-.5 1-1 1h-7c-.5 0-1-.5-1-1V6c0-.5.5-1 1-1h3V2c0-.5.5-1 1-1z" />
+                    </svg>
+                    Equipment Management
+                </h2>
+                <p>Track laboratory equipment, calibration status, and maintenance</p>
+            </div>
+
+            <div class="card">
+                <form id="equipmentForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="equipmentAction">Action</label>
+                            <select id="equipmentAction" class="form-control" required>
+                                <option value="">Select Action</option>
+                                <option value="add">Add New Equipment</option>
+                                <option value="update">Update Existing Equipment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group hidden" id="equipmentSelectGroup">
+                            <label for="existingEquipment">Select Equipment</label>
+                            <select id="existingEquipment" class="form-control">
+                                <option value="">Select equipment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentCategory">Equipment Category</label>
+                            <select id="equipmentCategory" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="calibration">Calibration Equipment</option>
+                                <option value="general">General Equipment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentDescription">Description</label>
+                            <input type="text" id="equipmentDescription" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentStock">Opening Stock</label>
+                            <input type="number" id="equipmentStock" class="form-control" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentQuantityInStore">Quantity in Store</label>
+                            <input type="number" id="equipmentQuantityInStore" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentLabStock">Lab Stock</label>
+                            <input type="number" id="equipmentLabStock" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentLoadOut">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="equipmentLoadOut" class="form-control"
+                                placeholder="e.g., Lab A, Field Site">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentClosingBalance">Closing Balance</label>
+                            <input type="number" id="equipmentClosingBalance" class="form-control" min="0">
+                        </div>
+
+                        <div class="form-group hidden" id="calibrationStatusGroup">
+                            <label for="calibrationStatus">Calibration Status</label>
+                            <input type="text" id="calibrationStatus" class="form-control"
+                                placeholder="e.g., UP TO DATE, Due Soon, Expired">
+                        </div>
+
+                        <div class="form-group hidden" id="equipmentStatusGroup">
+                            <label for="equipmentStatus">Equipment Status</label>
+                            <input type="text" id="equipmentStatus" class="form-control"
+                                placeholder="e.g., OK, Maintenance Needed">
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="equipmentRemarks">Remarks</label>
+                            <textarea id="equipmentRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="equipmentId">
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="clearEquipmentBtn">Clear Form</button>
+                        <button type="submit" class="btn btn-success" id="saveEquipmentBtn">Save Equipment</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="equipmentSearchInput" class="search-input" placeholder="Search equipment...">
+                    <button class="btn" id="equipmentSearchBtn">Search</button>
+                    <button class="btn btn-secondary" id="clearEquipmentSearchBtn">Clear</button>
+                </div>
+
+                <div id="equipmentInventoryContainer">
+                    <div class="loading">Loading equipment...</div>
+                </div>
+
+                <div class="table-container hidden" id="equipmentTableContainer">
+                    <table class="table" id="equipmentInventoryTable">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Opening Stock</th>
+                                <th>Quantity in Store</th>
+                                <th>Lab Stock</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
+                                <th>Calibration Status</th>
+                                <th>Equipment Status</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentInventoryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONSUMABLES TAB -->
+        <div class="tab-content" id="consumables-tab">
+            <div class="section-header">
+                <h2>
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path
+                            d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
+                    </svg>
+                    Consumables Management
+                </h2>
+                <p>Manage laboratory consumables and supplies</p>
+            </div>
+
+            <div class="card">
+                <form id="consumableForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="consumableAction">Action</label>
+                            <select id="consumableAction" class="form-control" required>
+                                <option value="">Select Action</option>
+                                <option value="add">Add New Consumable</option>
+                                <option value="update">Update Existing Consumable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group hidden" id="consumableSelectGroup">
+                            <label for="existingConsumable">Select Consumable</label>
+                            <select id="existingConsumable" class="form-control">
+                                <option value="">Select consumable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableDescription">Description</label>
+                            <input type="text" id="consumableDescription" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableStock">Opening Stock</label>
+                            <input type="number" id="consumableStock" class="form-control" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableQuantityInStore">Quantity in Store</label>
+                            <input type="number" id="consumableQuantityInStore" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableLabStock">Lab Stock</label>
+                            <input type="number" id="consumableLabStock" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableLocation">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="consumableLocation" class="form-control"
+                                placeholder="e.g., Storage A, Lab B">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableBalance">Closing Balance</label>
+                            <input type="number" id="consumableBalance" class="form-control" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consumableStatus">Equipment Status</label>
+                            <input type="text" id="consumableStatus" class="form-control"
+                                placeholder="e.g., OK, Low Stock, Out of Stock">
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="consumableRemarks">Remarks</label>
+                            <textarea id="consumableRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="consumableId">
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="clearConsumableBtn">Clear Form</button>
+                        <button type="submit" class="btn btn-success" id="saveConsumableBtn">Save Consumable</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="consumableSearchInput" class="search-input"
+                        placeholder="Search consumables...">
+                    <button class="btn" id="consumableSearchBtn">Search</button>
+                    <button class="btn btn-secondary" id="clearConsumableSearchBtn">Clear</button>
+                </div>
+
+                <div id="consumableInventoryContainer">
+                    <div class="loading">Loading consumables...</div>
+                </div>
+
+                <div class="table-container hidden" id="consumableTableContainer">
+                    <table class="table" id="consumableInventoryTable">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Description</th>
+                                <th>Opening Stock</th>
+                                <th>Quantity in Store</th>
+                                <th>Lab Stock</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
+                                <th>Equipment Status</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consumableInventoryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLASSWARES TAB -->
+        <div class="tab-content" id="glasswares-tab">
+            <div class="section-header">
+                <h2>
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 1a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v1.5h2a.5.5 0 0 1 .5.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3a.5.5 0 0 1 .5-.5h2V1z" />
+                    </svg>
+                    Glasswares Management
+                </h2>
+                <p>Track laboratory glassware inventory and condition</p>
+            </div>
+
+            <div class="card">
+                <form id="glasswareForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="glasswareAction">Action</label>
+                            <select id="glasswareAction" class="form-control" required>
+                                <option value="">Select Action</option>
+                                <option value="add">Add New Glassware</option>
+                                <option value="update">Update Existing Glassware</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group hidden" id="glasswareSelectGroup">
+                            <label for="existingGlassware">Select Glassware</label>
+                            <select id="existingGlassware" class="form-control">
+                                <option value="">Select glassware</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareDescription">Description</label>
+                            <input type="text" id="glasswareDescription" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareStock">Opening Stock</label>
+                            <input type="number" id="glasswareStock" class="form-control" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareQuantityInStore">Quantity in Store</label>
+                            <input type="number" id="glasswareQuantityInStore" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareLabStock">Lab Stock</label>
+                            <input type="number" id="glasswareLabStock" class="form-control" min="0" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareLoadOut">LOAD OUT (LOCATION)</label>
+                            <input type="text" id="glasswareLoadOut" class="form-control"
+                                placeholder="e.g., Lab A, Field Site">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareClosing">Closing Balance</label>
+                            <input type="number" id="glasswareClosing" class="form-control" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="glasswareStatus">Equipment Status</label>
+                            <input type="text" id="glasswareStatus" class="form-control"
+                                placeholder="e.g., OK, Damaged, Missing">
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="glasswareRemarks">Remarks</label>
+                            <textarea id="glasswareRemarks" class="form-control" rows="3"
+                                placeholder="Additional notes or comments"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="glasswareId">
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="clearGlasswareBtn">Clear Form</button>
+                        <button type="submit" class="btn btn-success" id="saveGlasswareBtn">Save Glassware</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="glasswareSearchInput" class="search-input" placeholder="Search glassware...">
+                    <button class="btn" id="glasswareSearchBtn">Search</button>
+                    <button class="btn btn-secondary" id="clearGlasswareSearchBtn">Clear</button>
+                </div>
+
+                <div id="glasswareInventoryContainer">
+                    <div class="loading">Loading glassware...</div>
+                </div>
+
+                <div class="table-container hidden" id="glasswareTableContainer">
+                    <table class="table" id="glasswareInventoryTable">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Description</th>
+                                <th>Opening Stock</th>
+                                <th>Quantity in Store</th>
+                                <th>Lab Stock</th>
+                                <th>LOAD OUT (LOCATION)</th>
+                                <th>Closing Balance</th>
+                                <th>Equipment Status</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="glasswareInventoryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <!-- Then load your application logic -->
+    <script src="app.js"></script>
+
+</body>
+
+</html>
