@@ -10,15 +10,73 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
 </head>
 
 <body>
-    <div class="container">
+    <!-- Authentication Modal -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <h2>Laboratory Access Required</h2>
+            <p>Please sign in to access the laboratory inventory management system.</p>
+
+            <!-- Sign In Form -->
+            <form id="authForm" style="display: block;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+                <button type="button" class="btn btn-secondary" id="showSignupBtn">Request Access</button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <button type="submit" class="btn">Request Access</button>
+                <button type="button" class="btn btn-secondary" id="showSigninBtn">Back to Sign In</button>
+            </form>
+
+            <div id="authError" class="auth-error"></div>
+        </div>
+    </div>
+
+    <!-- Main Application (hidden until authenticated) -->
+    <div id="mainApp" class="container" style="display: none;">
         <header class="header">
-            <h1>Laboratory Inventory Management</h1>
-            <p>Professional inventory tracking and management system</p>
+            <div class="header-content">
+                <div>
+                    <h1>Laboratory Inventory Management</h1>
+                    <p>Professional inventory tracking and management system</p>
+                </div>
+                <div class="user-info">
+                    <span id="userEmail"></span>
+                    <button class="btn btn-secondary" id="adminPanelBtn" style="display: none;">Admin Panel</button>
+                    <button class="btn btn-secondary" id="signOutBtn">Sign Out</button>
+                </div>
+            </div>
         </header>
 
         <div class="toolbar">
@@ -52,19 +110,6 @@
                         Download Report
                     </button>
                     <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden">
-                </div>
-                <div class="excel-template">
-                    <h4>Excel Template Format</h4>
-                    <p><strong>Sheet1 Structure:</strong></p>
-                    <p>• REAGENT INVENTORY section with columns: S/N, Reagent, Size, Opening Stock, Quantity Used (Lab),
-                        LOAD OUT (LOCATION), Closing Balance, Status, Remarks</p>
-                    <p>• EQUIPMENT INVENTORY section with columns: S/N, Description, Opening Stock, Quantity in Store,
-                        Lab Stock, LOAD OUT (LOCATION), Closing Balance, Calibration Status, Equipment Status, Remarks
-                    </p>
-                    <p>• CONSUMABLES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab
-                        Stock, LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
-                    <p>• GLASSWARES section with columns: S/N, Description, Opening Stock, Quantity in Store, Lab Stock,
-                        LOAD OUT (LOCATION), Closing Balance, Equipment Status, Remarks</p>
                 </div>
             </div>
         </div>
@@ -602,7 +647,6 @@
     </div>
 
     <script src="firebase-config.js"></script>
-    <!-- Then load your application logic -->
     <script src="app.js"></script>
 
 </body>

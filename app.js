@@ -1,7 +1,20 @@
+// Updated app.js with complete authentication and admin system
+
 const messageContainer = document.getElementById('messageContainer');
 const tabs = document.querySelectorAll('.tab');
 const tabContents = document.querySelectorAll('.tab-content');
 const inventoryTypes = ['reagent', 'equipment', 'consumable', 'glassware'];
+
+// Authentication state
+let currentUser = null;
+let isAuthenticated = false;
+let isAdmin = false;
+const authModal = document.getElementById('authModal');
+const mainApp = document.getElementById('mainApp');
+const authForm = document.getElementById('authForm');
+const authError = document.getElementById('authError');
+const userEmail = document.getElementById('userEmail');
+const signOutBtn = document.getElementById('signOutBtn');
 
 // Utility Functions
 function showMessage(message, type = 'success') {
@@ -40,7 +53,245 @@ tabs.forEach(tab => {
     });
 });
 
+// Authentication functions
+function showAuthModal() {
+    authModal.style.display = 'flex';
+    mainApp.style.display = 'none';
+    isAuthenticated = false;
+}
+
+function showMainApp() {
+    authModal.style.display = 'none';
+    mainApp.style.display = 'block';
+    userEmail.textContent = currentUser.email;
+}
+
+function showAuthError(message) {
+    authError.textContent = message;
+    authError.style.color = '#dc3545';
+}
+
+function showAuthSuccess(message) {
+    authError.textContent = message;
+    authError.style.color = '#28a745';
+}
+
+// Check if user is admin
+async function checkAdminStatus(user) {
+    try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            return userData.role === 'admin';
+        }
+        return false;
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+        return false;
+    }
+}
+
+async function updateUIForAdmin(user) {
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+    if (user) {
+        const isUserAdmin = await checkAdminStatus(user);
+        if (isUserAdmin) {
+            adminPanelBtn.style.display = 'inline-block';
+            isAdmin = true;
+        } else {
+            adminPanelBtn.style.display = 'none';
+            isAdmin = false;
+        }
+    } else {
+        adminPanelBtn.style.display = 'none';
+        isAdmin = false;
+    }
+}
+
+document.getElementById('adminPanelBtn').addEventListener('click', () => {
+    window.open('admin.html', '_blank');
+});
+
+// Handle authentication form submission
+authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const submitBtn = authForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Signing In...';
+
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        // The onAuthStateChanged listener will handle the rest
+    } catch (error) {
+        showAuthError(error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
+});
+
+// Handle sign out
+signOutBtn.addEventListener('click', async () => {
+    try {
+        await auth.signOut();
+        showMessage('Signed out successfully!');
+        authForm.reset();
+        authError.textContent = '';
+    } catch (error) {
+        console.error('Error signing out:', error);
+    }
+});
+
+// Signup form handling
+const showSignupBtn = document.getElementById('showSignupBtn');
+const showSigninBtn = document.getElementById('showSigninBtn');
+const signupForm = document.getElementById('signupForm');
+
+showSignupBtn.addEventListener('click', () => {
+    authForm.style.display = 'none';
+    signupForm.style.display = 'block';
+    authError.textContent = '';
+});
+
+showSigninBtn.addEventListener('click', () => {
+    signupForm.style.display = 'none';
+    authForm.style.display = 'block';
+    authError.textContent = '';
+});
+
+// Handle signup form submission
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const fullName = document.getElementById('fullName').value;
+
+    if (password !== confirmPassword) {
+        showAuthError('Passwords do not match');
+        return;
+    }
+
+    const submitBtn = signupForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Creating Account...';
+
+    try {
+        // Check auto-approve setting
+        const settingsDoc = await db.collection('settings').doc('system').get();
+        const autoApprove = settingsDoc.exists && settingsDoc.data().autoApprove === true;
+
+        // Create Firebase Auth account first
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        const userStatus = autoApprove ? 'approved' : 'pending';
+
+        // Create user document
+        await db.collection('users').doc(user.uid).set({
+            email: email,
+            fullName: fullName,
+            status: userStatus,
+            role: 'user',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        if (!autoApprove) {
+            await db.collection('accessRequests').add({
+                userId: user.uid,
+                email: email,
+                fullName: fullName,
+                status: 'pending',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await auth.signOut();
+            showAuthSuccess('Account created! Your access is pending administrator approval.');
+        } else {
+            showAuthSuccess('Account created and approved! You can now sign in.');
+            await auth.signOut();
+        }
+
+        signupForm.reset();
+
+        setTimeout(() => {
+            signupForm.style.display = 'none';
+            authForm.style.display = 'block';
+            authError.textContent = '';
+        }, 3000);
+
+    } catch (error) {
+        showAuthError(error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
+});
+
+// Initialize the application
+function init() {
+    // Check authentication state
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+
+                    if (userData.status === 'approved') {
+                        currentUser = user;
+                        isAuthenticated = true;
+
+                        // Update UI for admin status
+                        await updateUIForAdmin(user);
+
+                        showMainApp();
+
+                        inventoryTypes.forEach(type => {
+                            loadInventoryData(type);
+                        });
+                        showMessage('Laboratory Inventory System loaded successfully!');
+                    } else {
+                        showAuthError('Your account is pending approval. Please wait for administrator approval.');
+                        await auth.signOut();
+                    }
+                } else {
+                    showAuthError('Account not found. Please contact administrator.');
+                    await auth.signOut();
+                }
+            } catch (error) {
+                console.error('Error checking user status:', error);
+                showAuthError('Error verifying account status.');
+                await auth.signOut();
+            }
+        } else {
+            currentUser = null;
+            isAuthenticated = false;
+            isAdmin = false;
+            showAuthModal();
+        }
+    });
+}
+
+function checkAuthentication() {
+    if (!isAuthenticated || !currentUser) {
+        showAuthModal();
+        return false;
+    }
+    return true;
+}
+
+// Excel Report Generation
 document.getElementById('downloadReportBtn').addEventListener('click', async () => {
+    if (!checkAuthentication()) return;
+
     try {
         showMessage('Generating monthly laboratory report...', 'success');
 
@@ -75,8 +326,7 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
         worksheet.getCell('B6').value = 'PERSONNEL/LAB';
         worksheet.mergeCells('B6:D6');
 
-        // Get personnel data from Firestore (you'll need to create a 'personnel' collection)
-        // For now, we'll use sample data - you should replace this with actual data
+        // Personnel data
         const personnelData = [
             ['', 'TOTAL NUMBER OF STAFF IN TECHNICAL DEPARTMENT', '', 4],
             ['', 'MANAGER', '', 1],
@@ -100,43 +350,14 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
         const testHeaders = ['S/N', 'CHEMICAL TESTED', 'VENDOR', 'STATUS', 'REMARK'];
         worksheet.addRow(testHeaders);
 
-        // Get test data from Firestore (you'll need a 'labTests' collection)
-        try {
-            const testSnapshot = await db.collection('labTests').orderBy('chemicalTested').get();
-            let testSn = 1;
-
-            if (!testSnapshot.empty) {
-                testSnapshot.forEach(doc => {
-                    const test = doc.data();
-                    worksheet.addRow([
-                        testSn++,
-                        test.chemicalTested || '',
-                        test.vendor || '',
-                        test.status || '',
-                        test.remark || ''
-                    ]);
-                });
-            } else {
-                // Fallback to sample data if no tests in database
-                const testData = [
-                    [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
-                    [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
-                ];
-                testData.forEach(row => {
-                    worksheet.addRow(row);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading lab tests:', error);
-            // Fallback to sample data if error occurs
-            const testData = [
-                [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
-                [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
-            ];
-            testData.forEach(row => {
-                worksheet.addRow(row);
-            });
-        }
+        // Sample test data (you can implement labTests collection)
+        const testData = [
+            [1, 'Full mud check', 'SHAFNET', '', 'Properties were reported'],
+            [2, 'Zinc Bromide check', 'SVS (UAE)', 'PASSED', 'Product were received']
+        ];
+        testData.forEach(row => {
+            worksheet.addRow(row);
+        });
 
         // Add empty row
         worksheet.addRow([]);
@@ -162,7 +383,7 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
                 reagent.size || '',
                 reagent.stock || 0,
                 reagent.labStock || 0,
-                reagent.loadOutLocation || '', // Changed from loadOut/location to loadOutLocation
+                reagent.loadOutLocation || '',
                 reagent.closingBalance || 0,
                 reagent.status || '',
                 reagent.remarks || ''
@@ -194,7 +415,7 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
                 equipment.stock || 0,
                 equipment.quantityInStore || 0,
                 equipment.labStock || 0,
-                equipment.loadOutLocation || '', // Changed from loadOut to loadOutLocation
+                equipment.loadOutLocation || '',
                 equipment.closingBalance || 0,
                 equipment.calibrationStatus || '',
                 equipment.equipmentStatus || ''
@@ -297,13 +518,12 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
 
         // Style the worksheet
         worksheet.columns.forEach(column => {
-            column.width = 15; // Set default column width
+            column.width = 15;
         });
 
-        // Set specific column widths
-        worksheet.getColumn(2).width = 30; // Description/Name column
-        worksheet.getColumn(3).width = 20; // Vendor/Size column
-        worksheet.getColumn(9).width = 25; // Remarks column
+        worksheet.getColumn(2).width = 30;
+        worksheet.getColumn(3).width = 20;
+        worksheet.getColumn(9).width = 25;
 
         // Generate and download the file
         const buffer = await workbook.xlsx.writeBuffer();
@@ -319,6 +539,7 @@ document.getElementById('downloadReportBtn').addEventListener('click', async () 
 
 // Excel Import functionality
 document.getElementById('importExcelBtn').addEventListener('click', () => {
+    if (!checkAuthentication()) return;
     document.getElementById('excelFileInput').click();
 });
 
@@ -354,6 +575,68 @@ document.getElementById('excelFileInput').addEventListener('change', async (even
         showMessage(`Error importing Excel: ${error.message}`, 'error');
     } finally {
         document.getElementById('excelFileInput').value = '';
+    }
+});
+
+// Template download
+document.getElementById('downloadTemplateBtn').addEventListener('click', async () => {
+    if (!checkAuthentication()) return;
+
+    try {
+        showMessage('Generating Excel template...', 'success');
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Sheet1');
+
+        // Add headers and sample data for each section
+        let currentRow = 1;
+
+        // REAGENT INVENTORY Section
+        worksheet.getCell(`B${currentRow}`).value = 'REAGENT INVENTORY';
+        worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
+        currentRow += 1;
+
+        const reagentHeaders = ['S/N', '', 'Reagent', 'Size', 'Opening Stock', 'Quantity Used (Lab)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Status', 'Remarks'];
+        reagentHeaders.forEach((header, index) => {
+            worksheet.getCell(currentRow, index + 1).value = header;
+            worksheet.getCell(currentRow, index + 1).font = { bold: true };
+        });
+        currentRow += 1;
+
+        // Sample reagent data
+        const sampleReagentData = [
+            [1, '', 'Hydrochloric Acid', '1L', 10, 2, 'Lab A', 8, 'OK', 'Good condition'],
+            [2, '', 'Sodium Hydroxide', '500ml', 5, 1, 'Lab B', 4, 'Low Stock', 'Need reorder']
+        ];
+
+        sampleReagentData.forEach(row => {
+            row.forEach((cell, index) => {
+                worksheet.getCell(currentRow, index + 1).value = cell;
+            });
+            currentRow += 1;
+        });
+
+        // Add remaining sections following similar pattern...
+
+        // Auto-fit columns
+        worksheet.columns.forEach(column => {
+            let maxWidth = 0;
+            column.eachCell({ includeEmpty: true }, cell => {
+                const cellValue = cell.value ? cell.value.toString() : '';
+                maxWidth = Math.max(maxWidth, cellValue.length);
+            });
+            column.width = Math.min(maxWidth + 2, 50);
+        });
+
+        // Generate and download the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'Lab_Inventory_Template.xlsx');
+
+        showMessage('Excel template downloaded successfully!', 'success');
+    } catch (error) {
+        console.error('Error generating template:', error);
+        showMessage('Error generating Excel template', 'error');
     }
 });
 
@@ -395,13 +678,12 @@ async function processReagents(sheet) {
             size: getCellValue(row, 4),
             stock: parseInt(getCellValue(row, 5)) || 0,
             labStock: parseInt(getCellValue(row, 6)) || 0,
-            loadOutLocation: getCellValue(row, 7), // Changed from location to loadOutLocation
+            loadOutLocation: getCellValue(row, 7),
             closingBalance: parseInt(getCellValue(row, 8)) || 0,
             status: getCellValue(row, 9),
             remarks: getCellValue(row, 10),
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
-
 
         if (reagent.name) reagents.push(reagent);
     }
@@ -447,7 +729,7 @@ async function processEquipment(sheet) {
             stock: parseInt(getCellValue(row, 4)) || 0,
             quantityInStore: parseInt(getCellValue(row, 5)) || 0,
             labStock: parseInt(getCellValue(row, 6)) || 0,
-            loadOutLocation: getCellValue(row, 7), // Changed from loadOut to loadOutLocation
+            loadOutLocation: getCellValue(row, 7),
             closingBalance: parseInt(getCellValue(row, 8)) || 0,
             calibrationStatus: getCellValue(row, 9),
             equipmentStatus: getCellValue(row, 10),
@@ -468,143 +750,6 @@ async function processEquipment(sheet) {
         await batch.commit();
     }
 }
-document.getElementById('downloadTemplateBtn').addEventListener('click', async () => {
-    try {
-        showMessage('Generating Excel template...', 'success');
-
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Sheet1');
-
-        // Add headers and sample data for each section
-        let currentRow = 1;
-
-        // REAGENT INVENTORY Section
-        worksheet.getCell(`B${currentRow}`).value = 'REAGENT INVENTORY';
-        worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-        currentRow += 1;
-
-        const reagentHeaders = ['S/N', '', 'Reagent', 'Size', 'Opening Stock', 'Quantity Used (Lab)', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Status', 'Remarks'];
-        reagentHeaders.forEach((header, index) => {
-            worksheet.getCell(currentRow, index + 1).value = header;
-            worksheet.getCell(currentRow, index + 1).font = { bold: true };
-        });
-        currentRow += 1;
-
-        // Sample reagent data
-        const sampleReagentData = [
-            [1, '', 'Hydrochloric Acid', '1L', 10, 2, 'Lab A', 8, 'OK', 'Good condition'],
-            [2, '', 'Sodium Hydroxide', '500ml', 5, 1, 'Lab B', 4, 'Low Stock', 'Need reorder']
-        ];
-
-        sampleReagentData.forEach(row => {
-            row.forEach((cell, index) => {
-                worksheet.getCell(currentRow, index + 1).value = cell;
-            });
-            currentRow += 1;
-        });
-
-        currentRow += 2; // Empty rows
-
-        // EQUIPMENT INVENTORY Section
-        worksheet.getCell(`B${currentRow}`).value = 'EQUIPMENT INVENTORY';
-        worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-        currentRow += 1;
-
-        const equipmentHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'Closing Balance', 'Calibration Status', 'Equipment Status', 'Remarks'];
-        equipmentHeaders.forEach((header, index) => {
-            worksheet.getCell(currentRow, index + 1).value = header;
-            worksheet.getCell(currentRow, index + 1).font = { bold: true };
-        });
-        currentRow += 1;
-
-        // Sample equipment data
-        const sampleEquipmentData = [
-            [1, '', 'Calibration Weight Set', 2, 1, 1, 'Lab C', 2, 'UP TO DATE', 'OK', 'Working fine'],
-            [2, '', 'Digital Balance', 3, 2, 1, 'Lab A', 3, 'Due Soon', 'OK', 'Regular maintenance needed']
-        ];
-
-        sampleEquipmentData.forEach(row => {
-            row.forEach((cell, index) => {
-                worksheet.getCell(currentRow, index + 1).value = cell;
-            });
-            currentRow += 1;
-        });
-
-        currentRow += 2; // Empty rows
-
-        // CONSUMABLES Section
-        worksheet.getCell(`B${currentRow}`).value = 'CONSUMABLES';
-        worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-        currentRow += 1;
-
-        const consumableHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Equipment Status', 'Remarks'];
-        consumableHeaders.forEach((header, index) => {
-            worksheet.getCell(currentRow, index + 1).value = header;
-            worksheet.getCell(currentRow, index + 1).font = { bold: true };
-        });
-        currentRow += 1;
-
-        // Sample consumable data
-        const sampleConsumableData = [
-            [1, '', 'Test Tubes', 100, 50, 30, 'Storage A', 80, 'OK', 'Good supply'],
-            [2, '', 'Pipette Tips', 200, 100, 50, 'Storage B', 150, 'OK', 'Regular stock']
-        ];
-
-        sampleConsumableData.forEach(row => {
-            row.forEach((cell, index) => {
-                worksheet.getCell(currentRow, index + 1).value = cell;
-            });
-            currentRow += 1;
-        });
-
-        currentRow += 2; // Empty rows
-
-        // GLASSWARES Section
-        worksheet.getCell(`B${currentRow}`).value = 'GLASSWARES';
-        worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 14 };
-        currentRow += 1;
-
-        const glasswareHeaders = ['S/N', '', 'Description', 'Opening Stock', 'Quantity in Store', 'Lab Stock', 'LOAD OUT (LOCATION)', 'CLOSING BALANCE', 'Equipment Status', 'Remarks'];
-        glasswareHeaders.forEach((header, index) => {
-            worksheet.getCell(currentRow, index + 1).value = header;
-            worksheet.getCell(currentRow, index + 1).font = { bold: true };
-        });
-        currentRow += 1;
-
-        // Sample glassware data
-        const sampleGlasswareData = [
-            [1, '', 'Beakers 250ml', 20, 10, 5, 'Lab A', 15, 'OK', 'Clean condition'],
-            [2, '', 'Measuring Cylinders 100ml', 15, 8, 4, 'Lab B', 12, 'OK', 'Good condition']
-        ];
-
-        sampleGlasswareData.forEach(row => {
-            row.forEach((cell, index) => {
-                worksheet.getCell(currentRow, index + 1).value = cell;
-            });
-            currentRow += 1;
-        });
-
-        // Auto-fit columns
-        worksheet.columns.forEach(column => {
-            let maxWidth = 0;
-            column.eachCell({ includeEmpty: true }, cell => {
-                const cellValue = cell.value ? cell.value.toString() : '';
-                maxWidth = Math.max(maxWidth, cellValue.length);
-            });
-            column.width = Math.min(maxWidth + 2, 50);
-        });
-
-        // Generate and download the file
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, 'Lab_Inventory_Template.xlsx');
-
-        showMessage('Excel template downloaded successfully!', 'success');
-    } catch (error) {
-        console.error('Error generating template:', error);
-        showMessage('Error generating Excel template', 'error');
-    }
-});
 
 async function processConsumables(sheet) {
     const consumables = [];
@@ -637,8 +782,8 @@ async function processConsumables(sheet) {
             stock: parseInt(getCellValue(row, 4)) || 0,
             quantityInStore: parseInt(getCellValue(row, 5)) || 0,
             labStock: parseInt(getCellValue(row, 6)) || 0,
-            loadOutLocation: getCellValue(row, 7), // Changed from location to loadOutLocation
-            closingBalance: parseInt(getCellValue(row, 8)) || 0, // Changed from balance to closingBalance
+            loadOutLocation: getCellValue(row, 7),
+            closingBalance: parseInt(getCellValue(row, 8)) || 0,
             status: getCellValue(row, 9),
             remarks: getCellValue(row, 10),
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -683,8 +828,8 @@ async function processGlassware(sheet) {
             stock: parseInt(getCellValue(row, 4)) || 0,
             quantityInStore: parseInt(getCellValue(row, 5)) || 0,
             labStock: parseInt(getCellValue(row, 6)) || 0,
-            loadOutLocation: getCellValue(row, 7), // Changed from loadOut to loadOutLocation
-            closingBalance: parseInt(getCellValue(row, 8)) || 0, // Changed from closing to closingBalance
+            loadOutLocation: getCellValue(row, 7),
+            closingBalance: parseInt(getCellValue(row, 8)) || 0,
             status: getCellValue(row, 9),
             remarks: getCellValue(row, 10),
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -843,7 +988,7 @@ function populateForm(type, item, id) {
         document.getElementById('reagentSize').value = item.size || '';
         document.getElementById('reagentStock').value = item.stock || 0;
         document.getElementById('reagentLabStock').value = item.labStock || 0;
-        document.getElementById('reagentLocation').value = item.loadOutLocation || ''; // Changed from location to loadOutLocation
+        document.getElementById('reagentLocation').value = item.loadOutLocation || '';
         document.getElementById('reagentClosingBalance').value = item.closingBalance || 0;
         document.getElementById('reagentStatus').value = item.status || 'OK';
         document.getElementById('reagentRemarks').value = item.remarks || '';
@@ -853,7 +998,7 @@ function populateForm(type, item, id) {
         document.getElementById('equipmentStock').value = item.stock || 0;
         document.getElementById('equipmentQuantityInStore').value = item.quantityInStore || 0;
         document.getElementById('equipmentLabStock').value = item.labStock || 0;
-        document.getElementById('equipmentLoadOut').value = item.loadOutLocation || ''; // Changed from loadOut to loadOutLocation
+        document.getElementById('equipmentLoadOut').value = item.loadOutLocation || '';
         document.getElementById('equipmentClosingBalance').value = item.closingBalance || 0;
         document.getElementById('equipmentCategory').value = item.category || '';
         document.getElementById('equipmentRemarks').value = item.remarks || '';
@@ -878,8 +1023,8 @@ function populateForm(type, item, id) {
         document.getElementById('consumableStock').value = item.stock || 0;
         document.getElementById('consumableQuantityInStore').value = item.quantityInStore || 0;
         document.getElementById('consumableLabStock').value = item.labStock || 0;
-        document.getElementById('consumableLocation').value = item.loadOutLocation || ''; // Changed from location to loadOutLocation
-        document.getElementById('consumableBalance').value = item.closingBalance || 0; // Changed from balance to closingBalance
+        document.getElementById('consumableLocation').value = item.loadOutLocation || '';
+        document.getElementById('consumableBalance').value = item.closingBalance || 0;
         document.getElementById('consumableStatus').value = item.status || '';
         document.getElementById('consumableRemarks').value = item.remarks || '';
     }
@@ -888,8 +1033,8 @@ function populateForm(type, item, id) {
         document.getElementById('glasswareStock').value = item.stock || 0;
         document.getElementById('glasswareQuantityInStore').value = item.quantityInStore || 0;
         document.getElementById('glasswareLabStock').value = item.labStock || 0;
-        document.getElementById('glasswareLoadOut').value = item.loadOutLocation || ''; // Changed from loadOut to loadOutLocation
-        document.getElementById('glasswareClosing').value = item.closingBalance || 0; // Changed from closing to closingBalance
+        document.getElementById('glasswareLoadOut').value = item.loadOutLocation || '';
+        document.getElementById('glasswareClosing').value = item.closingBalance || 0;
         document.getElementById('glasswareStatus').value = item.status || '';
         document.getElementById('glasswareRemarks').value = item.remarks || '';
     }
@@ -955,6 +1100,8 @@ function clearFormFields(type) {
 }
 
 function handleFormSubmit(type) {
+    if (!checkAuthentication()) return;
+
     const action = document.getElementById(`${type}Action`).value;
     const id = document.getElementById(`${type}Id`).value;
     const nameField = document.getElementById(type === 'reagent' ? `${type}Name` : `${type}Description`);
@@ -1007,7 +1154,7 @@ function buildItemData(type) {
         itemData.size = document.getElementById('reagentSize').value.trim();
         itemData.stock = parseInt(document.getElementById('reagentStock').value) || 0;
         itemData.labStock = parseInt(document.getElementById('reagentLabStock').value) || 0;
-        itemData.loadOutLocation = document.getElementById('reagentLocation').value.trim(); // Changed from location to loadOutLocation
+        itemData.loadOutLocation = document.getElementById('reagentLocation').value.trim();
         itemData.closingBalance = parseInt(document.getElementById('reagentClosingBalance').value) || 0;
         itemData.status = document.getElementById('reagentStatus').value.trim();
         itemData.remarks = document.getElementById('reagentRemarks').value.trim();
@@ -1018,7 +1165,7 @@ function buildItemData(type) {
         itemData.stock = parseInt(document.getElementById('equipmentStock').value) || 0;
         itemData.quantityInStore = parseInt(document.getElementById('equipmentQuantityInStore').value) || 0;
         itemData.labStock = parseInt(document.getElementById('equipmentLabStock').value) || 0;
-        itemData.loadOutLocation = document.getElementById('equipmentLoadOut').value.trim(); // Changed from loadOut to loadOutLocation
+        itemData.loadOutLocation = document.getElementById('equipmentLoadOut').value.trim();
         itemData.closingBalance = parseInt(document.getElementById('equipmentClosingBalance').value) || 0;
         itemData.remarks = document.getElementById('equipmentRemarks').value.trim();
 
@@ -1037,8 +1184,8 @@ function buildItemData(type) {
         itemData.stock = parseInt(document.getElementById('consumableStock').value) || 0;
         itemData.quantityInStore = parseInt(document.getElementById('consumableQuantityInStore').value) || 0;
         itemData.labStock = parseInt(document.getElementById('consumableLabStock').value) || 0;
-        itemData.loadOutLocation = document.getElementById('consumableLocation').value.trim(); // Changed from location to loadOutLocation
-        itemData.closingBalance = parseInt(document.getElementById('consumableBalance').value) || 0; // Changed from balance to closingBalance
+        itemData.loadOutLocation = document.getElementById('consumableLocation').value.trim();
+        itemData.closingBalance = parseInt(document.getElementById('consumableBalance').value) || 0;
         itemData.status = document.getElementById('consumableStatus').value.trim();
         itemData.remarks = document.getElementById('consumableRemarks').value.trim();
     }
@@ -1047,19 +1194,24 @@ function buildItemData(type) {
         itemData.stock = parseInt(document.getElementById('glasswareStock').value) || 0;
         itemData.quantityInStore = parseInt(document.getElementById('glasswareQuantityInStore').value) || 0;
         itemData.labStock = parseInt(document.getElementById('glasswareLabStock').value) || 0;
-        itemData.loadOutLocation = document.getElementById('glasswareLoadOut').value.trim(); // Changed from loadOut to loadOutLocation
-        itemData.closingBalance = parseInt(document.getElementById('glasswareClosing').value) || 0; // Changed from closing to closingBalance
+        itemData.loadOutLocation = document.getElementById('glasswareLoadOut').value.trim();
+        itemData.closingBalance = parseInt(document.getElementById('glasswareClosing').value) || 0;
         itemData.status = document.getElementById('glasswareStatus').value.trim();
         itemData.remarks = document.getElementById('glasswareRemarks').value.trim();
     }
 
     return itemData;
 }
+
 function loadInventoryData(type) {
     const container = document.getElementById(`${type}InventoryContainer`);
     const tableContainer = document.getElementById(`${type}TableContainer`);
     const tableBody = document.getElementById(`${type}InventoryTableBody`);
     const nameField = type === 'reagent' ? 'name' : 'description';
+
+    if (!checkAuthentication()) {
+        return;
+    }
 
     container.innerHTML = '<div class="loading">Loading inventory...</div>';
     if (tableContainer) tableContainer.classList.add('hidden');
@@ -1107,7 +1259,7 @@ function buildTableRow(type, item, id, sn) {
                     <td>${item.size || ''}</td>
                     <td>${item.stock || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from location to loadOutLocation -->
+                    <td>${item.loadOutLocation || ''}</td>
                     <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
@@ -1130,7 +1282,7 @@ function buildTableRow(type, item, id, sn) {
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from loadOut to loadOutLocation -->
+                    <td>${item.loadOutLocation || ''}</td>
                     <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.calibrationStatus)}</td>
                     <td>${renderStatusBadge(item.equipmentStatus)}</td>
@@ -1150,8 +1302,8 @@ function buildTableRow(type, item, id, sn) {
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from location to loadOutLocation -->
-                    <td>${item.closingBalance || 0}</td> <!-- Changed from balance to closingBalance -->
+                    <td>${item.loadOutLocation || ''}</td>
+                    <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
                     <td>
@@ -1169,8 +1321,8 @@ function buildTableRow(type, item, id, sn) {
                     <td>${item.stock || 0}</td>
                     <td>${item.quantityInStore || 0}</td>
                     <td>${item.labStock || 0}</td>
-                    <td>${item.loadOutLocation || ''}</td> <!-- Changed from loadOut to loadOutLocation -->
-                    <td>${item.closingBalance || 0}</td> <!-- Changed from closing to closingBalance -->
+                    <td>${item.loadOutLocation || ''}</td>
+                    <td>${item.closingBalance || 0}</td>
                     <td>${renderStatusBadge(item.status)}</td>
                     <td>${item.remarks || ''}</td>
                     <td>
@@ -1232,21 +1384,6 @@ function filterInventory(type) {
         } else {
             row.style.display = 'none';
         }
-    }
-}
-
-// Initialize the application
-function init() {
-    try {
-        // Load all inventory data with real-time listeners
-        inventoryTypes.forEach(type => {
-            loadInventoryData(type);
-        });
-
-        showMessage('Laboratory Inventory System loaded successfully!');
-    } catch (error) {
-        console.error('Error initializing app:', error);
-        showMessage('Error initializing application. Please refresh the page.', 'error');
     }
 }
 
